@@ -1,2 +1,6 @@
 .idea
 vendor
+tests/_support/_generated
+tests/_support/
+tests/_output
+tests/_data

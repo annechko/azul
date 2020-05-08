@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Azul\\": "src/"
+            "Azul\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "require": {
@@ -9,5 +10,10 @@
     },
     "bin": [
         "azul"
-    ]
+    ],
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
+    }
 }
