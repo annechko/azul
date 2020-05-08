@@ -1,0 +1,13 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Azul\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/console": "^4.4"
+    },
+    "bin": [
+        "azul"
+    ]
+}
