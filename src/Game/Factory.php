@@ -35,7 +35,7 @@ class Factory
                 $tilesToTable[] = $tile;
             }
         }
-        Assert::notEmpty($tilesByColor);
+        Assert::minCount($tilesByColor, 1);
         $this->table->addToCenterPile($tilesToTable);
         unset($this->tiles);
         return $tilesByColor;
