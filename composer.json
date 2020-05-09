@@ -6,7 +6,8 @@
         }
     },
     "require": {
-        "symfony/console": "^4.4"
+        "symfony/console": "^4.4",
+        "beberlei/assert": "^3.2"
     },
     "bin": [
         "azul"
