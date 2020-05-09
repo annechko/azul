@@ -2,32 +2,23 @@
 
 namespace Azul\Game;
 
-use Azul\Game\Exception\MarkerAlreadyTakenException;
-use Azul\Game\Exception\MarkerCanNotBeTakenException;
-use Azul\Game\Exception\MarkerShouldHaveBeenTakenException;
-use Azul\Tile\Tile;
+use Azul\Tile\Marker;
+use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
 
 class Table
 {
     private $centerPile = [];
-    /** @var bool */
-    private $markerOnTable;
-    /** @var bool */
-    private $shouldMarkerBeTaken;
+    /** @var Marker|null */
+    private $marker;
 
-    public function __construct()
+    public function __construct(Marker $marker)
     {
-        $this->markerOnTable = true;
-        $this->shouldMarkerBeTaken = false;
+        $this->marker = $marker;
     }
 
-    public function addToCenterPile($tiles): void
+    public function addToCenterPile(TileCollection $tiles): void
     {
-        if ($tiles instanceof Tile) {
-            $tiles = [$tiles];
-        }
-        Assert::allIsInstanceOf($tiles, Tile::class);
         foreach ($tiles as $tile) {
             $this->centerPile[$tile->getColor()][] = $tile;
         }
@@ -45,36 +36,15 @@ class Table
         return count($this->centerPile[$color] ?? []);
     }
 
-    public function hasStartingPlayerMarker(): bool
-    {
-        return $this->markerOnTable;
-    }
-
-    public function take(string $color): array
+    public function take(string $color): TileCollection
     {
         Assert::notEmpty($this->centerPile[$color]);
-        if ($this->markerOnTable) {
-            if ($this->shouldMarkerBeTaken) {
-                throw new MarkerShouldHaveBeenTakenException();
-            }
-            $this->shouldMarkerBeTaken = true;
+        $tiles = new TileCollection($this->centerPile[$color]);
+        if ($this->marker) {
+            $tiles[] = $this->marker;
+            $this->marker = null;
         }
-        $tiles = $this->centerPile[$color];
         unset($this->centerPile[$color]);
         return $tiles;
-    }
-
-    public function takeMarker(): void
-    {
-        if (!$this->markerOnTable) {
-            throw new MarkerAlreadyTakenException();
-        }
-
-        if (!$this->shouldMarkerBeTaken) {
-            throw new MarkerCanNotBeTakenException();
-        }
-
-        $this->markerOnTable = false;
-        $this->shouldMarkerBeTaken = false;
     }
 }

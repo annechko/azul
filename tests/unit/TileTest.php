@@ -5,11 +5,11 @@ namespace Tests;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
 
-class TileTest extends \Codeception\Test\Unit
+class TileTest extends BaseUnit
 {
     public function testCreate_Red_ColorIsRight()
     {
-        $tile = Tile::createRed();
+        $tile = new Tile(Color::RED);
         $this->assertTrue($this->isRed($tile));
         $this->assertFalse($this->isCyan($tile));
         $this->assertFalse($this->isBlue($tile));
@@ -19,7 +19,7 @@ class TileTest extends \Codeception\Test\Unit
 
     public function testCreate_Black_ColorIsRight()
     {
-        $tile = Tile::createBlack();
+        $tile = new Tile(Color::BLACK);
         $this->assertTrue($this->isBlack($tile));
         $this->assertFalse($this->isRed($tile));
         $this->assertFalse($this->isCyan($tile));
@@ -29,7 +29,7 @@ class TileTest extends \Codeception\Test\Unit
 
     public function testCreate_Yellow_ColorIsRight()
     {
-        $tile = Tile::createYellow();
+        $tile = new Tile(Color::YELLOW);
         $this->assertTrue($this->isYellow($tile));
         $this->assertFalse($this->isBlack($tile));
         $this->assertFalse($this->isRed($tile));
@@ -39,7 +39,7 @@ class TileTest extends \Codeception\Test\Unit
 
     public function testCreate_Cyan_ColorIsRight()
     {
-        $tile = Tile::createCyan();
+        $tile = new Tile(Color::CYAN);
         $this->assertTrue($this->isCyan($tile));
         $this->assertFalse($this->isBlack($tile));
         $this->assertFalse($this->isRed($tile));
@@ -49,7 +49,7 @@ class TileTest extends \Codeception\Test\Unit
 
     public function testCreate_Blue_ColorIsRight()
     {
-        $tile = Tile::createBlue();
+        $tile = new Tile(Color::BLUE);
         $this->assertTrue($this->isBlue($tile));
         $this->assertFalse($this->isBlack($tile));
         $this->assertFalse($this->isRed($tile));

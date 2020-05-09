@@ -3,6 +3,7 @@
 namespace Azul\Game;
 
 use Azul\Tile\Tile;
+use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
 
 class Factory
@@ -12,22 +13,17 @@ class Factory
     /** @var Table */
     private $table;
 
-    /**
-     * @param Table $table
-     * @param Tile[] $tiles
-     */
-    public function __construct(Table $table, $tiles)
+    public function __construct(Table $table, TileCollection $tiles)
     {
         Assert::count($tiles, 4);
-        Assert::allIsInstanceOf($tiles, Tile::class);
         $this->table = $table;
         $this->tiles = $tiles;
     }
 
-    public function take(string $color): array
+    public function take(string $color): TileCollection
     {
-        $tilesByColor = [];
-        $tilesToTable = [];
+        $tilesByColor = new TileCollection();
+        $tilesToTable = new TileCollection();
         foreach ($this->tiles as $index => $tile) {
             if ($tile->isSameColor($color)) {
                 $tilesByColor[] = $tile;
@@ -37,7 +33,12 @@ class Factory
         }
         Assert::minCount($tilesByColor, 1);
         $this->table->addToCenterPile($tilesToTable);
-        unset($this->tiles);
+        $this->tiles = [];
         return $tilesByColor;
+    }
+
+    public function getTilesCount(): int
+    {
+        return count($this->tiles);
     }
 }

@@ -3,11 +3,12 @@
 namespace Tests;
 
 use Azul\Game\Bag;
+use Azul\Tile\Color;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
 use Azul\Tile\TileFactory;
 
-class BagTest extends \Codeception\Test\Unit
+class BagTest extends BaseUnit
 {
     public function testGetNext_NoTiles_NoNext()
     {
@@ -26,7 +27,7 @@ class BagTest extends \Codeception\Test\Unit
     {
         $tiles = new TileCollection();
         for ($j = 0; $j < 5; $j++) {
-            $tiles->addTile(Tile::createBlack());
+            $tiles->addTile(new Tile(Color::BLACK));
         }
         $bag = new Bag($tiles);
         $this->assertCount(4, $bag->getNextPlate());
@@ -37,7 +38,7 @@ class BagTest extends \Codeception\Test\Unit
     {
         $tiles = new TileCollection();
         for ($j = 0; $j < 5; $j++) {
-            $tiles->addTile(Tile::createBlack());
+            $tiles->addTile(new Tile(Color::BLACK));
         }
         $bag = new Bag($tiles);
         $this->assertCount(4, $firstPlate = $bag->getNextPlate());
@@ -50,13 +51,13 @@ class BagTest extends \Codeception\Test\Unit
         $tilesFirst = new TileCollection();
         $tilesSecond = new TileCollection();
         for ($j = 0; $j < 4; $j++) {
-            $tilesFirst->addTile(Tile::createBlack());
-            $tilesFirst->addTile(Tile::createCyan());
-            $tilesFirst->addTile(Tile::createRed());
+            $tilesFirst->addTile(new Tile(Color::BLACK));
+            $tilesFirst->addTile(new Tile(Color::CYAN));
+            $tilesFirst->addTile(new Tile(Color::RED));
 
-            $tilesSecond->addTile(Tile::createBlack());
-            $tilesSecond->addTile(Tile::createCyan());
-            $tilesSecond->addTile(Tile::createRed());
+            $tilesSecond->addTile(new Tile(Color::BLACK));
+            $tilesSecond->addTile(new Tile(Color::CYAN));
+            $tilesSecond->addTile(new Tile(Color::RED));
         }
         $bag = new Bag(new TileCollection());
         $bag->discardTiles($tilesSecond);

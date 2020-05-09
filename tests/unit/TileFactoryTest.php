@@ -6,7 +6,7 @@ use Azul\Tile\Color;
 use Azul\Tile\Tile;
 use Azul\Tile\TileFactory;
 
-class TileFactoryTest extends \Codeception\Test\Unit
+class TileFactoryTest extends BaseUnit
 {
     public function testCreateGameTiles_TotalCountOk()
     {
