@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Azul\Tile\Color;
 use Azul\Tile\Tile;
 
 class TileTest extends \Codeception\Test\Unit
@@ -9,50 +10,75 @@ class TileTest extends \Codeception\Test\Unit
     public function testCreate_Red_ColorIsRight()
     {
         $tile = Tile::createRed();
-        $this->assertTrue($tile->isRed());
-        $this->assertFalse($tile->isCyan());
-        $this->assertFalse($tile->isBlue());
-        $this->assertFalse($tile->isBlack());
-        $this->assertFalse($tile->isYellow());
+        $this->assertTrue($this->isRed($tile));
+        $this->assertFalse($this->isCyan($tile));
+        $this->assertFalse($this->isBlue($tile));
+        $this->assertFalse($this->isBlack($tile));
+        $this->assertFalse($this->isYellow($tile));
     }
 
     public function testCreate_Black_ColorIsRight()
     {
         $tile = Tile::createBlack();
-        $this->assertTrue($tile->isBlack());
-        $this->assertFalse($tile->isRed());
-        $this->assertFalse($tile->isCyan());
-        $this->assertFalse($tile->isBlue());
-        $this->assertFalse($tile->isYellow());
+        $this->assertTrue($this->isBlack($tile));
+        $this->assertFalse($this->isRed($tile));
+        $this->assertFalse($this->isCyan($tile));
+        $this->assertFalse($this->isBlue($tile));
+        $this->assertFalse($this->isYellow($tile));
     }
 
     public function testCreate_Yellow_ColorIsRight()
     {
         $tile = Tile::createYellow();
-        $this->assertTrue($tile->isYellow());
-        $this->assertFalse($tile->isBlack());
-        $this->assertFalse($tile->isRed());
-        $this->assertFalse($tile->isCyan());
-        $this->assertFalse($tile->isBlue());
+        $this->assertTrue($this->isYellow($tile));
+        $this->assertFalse($this->isBlack($tile));
+        $this->assertFalse($this->isRed($tile));
+        $this->assertFalse($this->isCyan($tile));
+        $this->assertFalse($this->isBlue($tile));
     }
 
     public function testCreate_Cyan_ColorIsRight()
     {
         $tile = Tile::createCyan();
-        $this->assertTrue($tile->isCyan());
-        $this->assertFalse($tile->isBlack());
-        $this->assertFalse($tile->isRed());
-        $this->assertFalse($tile->isYellow());
-        $this->assertFalse($tile->isBlue());
+        $this->assertTrue($this->isCyan($tile));
+        $this->assertFalse($this->isBlack($tile));
+        $this->assertFalse($this->isRed($tile));
+        $this->assertFalse($this->isYellow($tile));
+        $this->assertFalse($this->isBlue($tile));
     }
 
     public function testCreate_Blue_ColorIsRight()
     {
         $tile = Tile::createBlue();
-        $this->assertTrue($tile->isBlue());
-        $this->assertFalse($tile->isBlack());
-        $this->assertFalse($tile->isRed());
-        $this->assertFalse($tile->isYellow());
-        $this->assertFalse($tile->isCyan());
+        $this->assertTrue($this->isBlue($tile));
+        $this->assertFalse($this->isBlack($tile));
+        $this->assertFalse($this->isRed($tile));
+        $this->assertFalse($this->isYellow($tile));
+        $this->assertFalse($this->isCyan($tile));
+    }
+
+    private function isBlack(Tile $tile)
+    {
+        return $tile->isSameColor(Color::BLACK);
+    }
+
+    private function isBlue(Tile $tile)
+    {
+        return $tile->isSameColor(Color::BLUE);
+    }
+
+    private function isRed(Tile $tile)
+    {
+        return $tile->isSameColor(Color::RED);
+    }
+
+    private function isYellow(Tile $tile)
+    {
+        return $tile->isSameColor(Color::YELLOW);
+    }
+
+    private function isCyan(Tile $tile)
+    {
+        return $tile->isSameColor(Color::CYAN);
     }
 }

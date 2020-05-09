@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Azul\Tile\Color;
+use Azul\Tile\Tile;
 use Azul\Tile\TileFactory;
 
 class TileFactoryTest extends \Codeception\Test\Unit
@@ -16,7 +18,7 @@ class TileFactoryTest extends \Codeception\Test\Unit
         $tiles = $this->createTiles();
         $count = 0;
         foreach ($tiles as $tile) {
-            if ($tile->isRed()) {
+            if ($tile->isSameColor(Color::RED)) {
                 $count++;
             }
         }
@@ -28,7 +30,7 @@ class TileFactoryTest extends \Codeception\Test\Unit
         $tiles = $this->createTiles();
         $count = 0;
         foreach ($tiles as $tile) {
-            if ($tile->isBlue()) {
+            if ($tile->isSameColor(Color::BLUE)) {
                 $count++;
             }
         }
@@ -40,7 +42,7 @@ class TileFactoryTest extends \Codeception\Test\Unit
         $tiles = $this->createTiles();
         $count = 0;
         foreach ($tiles as $tile) {
-            if ($tile->isBlack()) {
+            if ($tile->isSameColor(Color::BLACK)) {
                 $count++;
             }
         }
@@ -52,13 +54,16 @@ class TileFactoryTest extends \Codeception\Test\Unit
         $tiles = $this->createTiles();
         $count = 0;
         foreach ($tiles as $tile) {
-            if ($tile->isCyan()) {
+            if ($tile->isSameColor(Color::CYAN)) {
                 $count++;
             }
         }
         $this->assertEquals(20, $count);
     }
 
+    /**
+     * @return Tile[]
+     */
     private function createTiles()
     {
         return (new TileFactory())->createGameTiles();
