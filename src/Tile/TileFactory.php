@@ -8,11 +8,9 @@ class TileFactory
     {
         $tiles = new TileCollection();
         for ($i = 0; $i < 20; $i++) {
-            $tiles->addTile(new Tile(Color::BLACK));
-            $tiles->addTile(new Tile(Color::BLUE));
-            $tiles->addTile(new Tile(Color::CYAN));
-            $tiles->addTile(new Tile(Color::RED));
-            $tiles->addTile(new Tile(Color::YELLOW));
+            foreach (Color::getAll() as $color) {
+                $tiles->addTile(new Tile($color));
+            }
         }
         return $tiles;
     }

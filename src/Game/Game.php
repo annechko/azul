@@ -4,13 +4,12 @@ namespace Azul\Game;
 
 use Azul\Player\PlayerCollection;
 use Azul\Tile\Marker;
-use Azul\Tile\TileFactory;
 
 class Game
 {
-    private bool $isOver;
-    private GameRound $round;
+    private Bag $bag;
     private Marker $marker;
+    private ?GameRound $round = null;
 
     public function __construct(Bag $bag, Marker $marker)
     {
@@ -18,28 +17,28 @@ class Game
         $this->marker = $marker;
     }
 
-    public function play(PlayerCollection $players)
+    public function play(PlayerCollection $players): void
     {
-        while ($this->canContinue()) {
+        while (true) {
             if (!$this->round) {
+                foreach ($players as $player) {
+                    if ($player->isGameOver()) {
+                        break;
+                    }
+                }
                 $this->round = $this->createRound($players);
             }
             if ($this->round->canContinue()) {
                 foreach ($players as $player) {
                     $player->act($this->round->getFactories(), $this->round->getTable());
                 }
+            } else {
+                $this->round = null;
+                foreach ($players as $player) {
+                    $player->doWallTiling();
+                }
             }
         }
-    }
-
-    private function setIsOver(bool $isOver): void
-    {
-        $this->isOver = $isOver;
-    }
-
-    private function canContinue(): bool
-    {
-        return !$this->isOver;
     }
 
     private function createRound(PlayerCollection $players): GameRound

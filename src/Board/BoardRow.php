@@ -18,9 +18,9 @@ class BoardRow
         $this->tiles = new TileCollection();
     }
 
-    public function addTiles(TileCollection $tiles): void
+    public function placeTiles(TileCollection $tiles): void
     {
-        if ($this->tiles->count() + $tiles->count() > $this->maxTiles) {
+        if ($this->getTilesCount() + $tiles->count() > $this->maxTiles) {
             throw new BoardRowSizeExceededException();
         }
         foreach ($tiles as $tile) {

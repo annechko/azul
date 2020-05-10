@@ -33,10 +33,14 @@ class Board
     public function placeTiles(TileCollection $tiles, $rowOrNumber): void
     {
         $row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
-        for ($j = 0; $j < $tiles->count() - $row->getEmptySlotsCount(); $j++) {
+        if ($tiles->bottom()->isFirstPlayerMarker()) {
             $this->floorLine->push($tiles->pop());
         }
-        $row->addTiles($tiles);
+        $extraCount = $tiles->count() - $row->getEmptySlotsCount();
+        for ($j = 0; $j < $extraCount; $j++) {
+            $this->floorLine->push($tiles->pop());
+        }
+        $row->placeTiles($tiles);
     }
 
     private function getRow(string $rowNumber): BoardRow

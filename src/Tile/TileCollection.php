@@ -3,7 +3,9 @@
 namespace Azul\Tile;
 
 /**
+ * @method Tile current()
  * @method Tile bottom()
+ * @method Tile top()
  */
 class TileCollection extends \SplStack
 {

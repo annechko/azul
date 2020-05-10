@@ -53,4 +53,14 @@ class Player
         }
         return false;
     }
+
+    public function doWallTiling(): void
+    {
+
+    }
+
+    public function isGameOver(): bool
+    {
+        return false;
+    }
 }
