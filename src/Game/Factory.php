@@ -9,13 +9,11 @@ use Webmozart\Assert\Assert;
 class Factory
 {
     /** @var Tile[] */
-    private $tiles;
-    /** @var Table */
-    private $table;
+    private TileCollection $tiles;
+    private Table $table;
 
     public function __construct(Table $table, TileCollection $tiles)
     {
-        Assert::count($tiles, 4);
         $this->table = $table;
         $this->tiles = $tiles;
     }
@@ -33,12 +31,21 @@ class Factory
         }
         Assert::minCount($tilesByColor, 1);
         $this->table->addToCenterPile($tilesToTable);
-        $this->tiles = [];
+        $this->tiles = new TileCollection();
         return $tilesByColor;
     }
 
-    public function getTilesCount(): int
+    public function getTilesCount(?string $color = null): int
     {
-        return count($this->tiles);
+        if ($color === null) {
+            return count($this->tiles);
+        }
+        $c = 0;
+        foreach ($this->tiles as $tile) {
+            if ($tile->isSameColor($color)) {
+                $c++;
+            }
+        }
+        return $c;
     }
 }

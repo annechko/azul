@@ -2,6 +2,9 @@
 
 namespace Azul\Tile;
 
+/**
+ * @method Tile bottom()
+ */
 class TileCollection extends \SplStack
 {
     public function __construct($tiles = [])

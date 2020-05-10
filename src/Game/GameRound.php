@@ -18,12 +18,22 @@ class GameRound
         $this->factories = $factories;
     }
 
-    public function canKeepPlaying(): bool
+    public function canContinue(): bool
     {
         $factoriesTileCount = 0;
         foreach ($this->factories as $factory) {
             $factoriesTileCount += $factory->getTilesCount();
         }
         return $this->table->getCenterPileCount() > 0 || $factoriesTileCount > 0;
+    }
+
+    public function getFactories(): array
+    {
+        return $this->factories;
+    }
+
+    public function getTable(): Table
+    {
+        return $this->table;
     }
 }

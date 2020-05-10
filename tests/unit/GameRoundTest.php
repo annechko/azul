@@ -25,8 +25,8 @@ class GameRoundTest extends BaseUnit
                 ),
             ]
         );
-        $this->assertTrue($round->canKeepPlaying());
+        $this->assertTrue($round->canContinue());
         $f->take(Color::CYAN);
-        $this->assertFalse($round->canKeepPlaying());
+        $this->assertFalse($round->canContinue());
     }
 }
