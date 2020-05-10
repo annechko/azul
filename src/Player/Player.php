@@ -3,10 +3,11 @@
 namespace Azul\Player;
 
 use Azul\Board\Board;
+use Azul\Board\BoardRow;
 use Azul\Game\Factory;
+use Azul\Game\ITileStorage;
 use Azul\Game\Table;
 use Azul\Tile\Color;
-use Azul\Tile\TileCollection;
 
 class Player
 {
@@ -23,25 +24,33 @@ class Player
      */
     public function act(array $factories, Table $table): void
     {
-        foreach ($factories as $factory) {
-            foreach (Color::getAll() as $color) {
-                $count = $factory->getTilesCount($color);
-                if ($count > 0) {
-                    for ($j = $count; $j <= 5; $j++) {
-                        /** @var TileCollection $row */
-                        $row = $this->board->{'row' . $count};
-                        if ($row->count() <= $count) {
-                            $tiles = $factory->take($color);
-                            foreach ($tiles as $tile) {
-                                $row->push($tile);
-                            }
-                            break;
-                        }
-                    }
-                } elseif ($table->getCenterPileCount($color) > 0) {
-
+        foreach (Color::getAll() as $color) {
+            foreach ($factories as $factory) {
+                $success = $this->tryToTake($factory, $color);
+                $success = $success ?: $this->tryToTake($table, $color);
+                if ($success) {
+                    return;
                 }
             }
         }
+    }
+
+    private function tryToTake(ITileStorage $storage, string $color): bool
+    {
+        $count = $storage->getTilesCount($color);
+        if ($count > 0) {
+            foreach ($this->board->getRows() as $row) {
+                /** @var BoardRow $row */
+                if ($row->isMainColor($color) && $row->getEmptySlotsCount() > 0) {
+                    $this->board->placeTiles($storage->take($color), $row);
+                    return true;
+                }
+                if ($row->getTilesCount() === 0) {
+                    $this->board->placeTiles($storage->take($color), $row);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

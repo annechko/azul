@@ -16,7 +16,7 @@ class TableTest extends BaseUnit
             new Tile(Color::RED),
             new Tile(Color::CYAN),
         ]));
-        $this->assertEquals(2, $table->getCenterPileCount());
+        $this->assertEquals(2, $table->getTilesCount());
     }
 
     public function testCountTotal_2SameColors_Total2()
@@ -26,13 +26,13 @@ class TableTest extends BaseUnit
             new Tile(Color::RED),
             new Tile(Color::RED),
         ]));
-        $this->assertEquals(2, $table->getCenterPileCount());
+        $this->assertEquals(2, $table->getTilesCount());
     }
 
     public function testCountTotal_Empty_Total0()
     {
         $table = $this->tester->createGameTable();
-        $this->assertEquals(0, $table->getCenterPileCount());
+        $this->assertEquals(0, $table->getTilesCount());
     }
 
     public function testCountByColor()
@@ -46,10 +46,10 @@ class TableTest extends BaseUnit
             new Tile(Color::CYAN),
             new Tile(Color::BLUE),
         ]));
-        $this->assertEquals(3, $table->getCenterPileCount(Color::RED));
-        $this->assertEquals(2, $table->getCenterPileCount(Color::CYAN));
-        $this->assertEquals(1, $table->getCenterPileCount(Color::BLUE));
-        $this->assertEquals(0, $table->getCenterPileCount(Color::YELLOW));
+        $this->assertEquals(3, $table->getTilesCount(Color::RED));
+        $this->assertEquals(2, $table->getTilesCount(Color::CYAN));
+        $this->assertEquals(1, $table->getTilesCount(Color::BLUE));
+        $this->assertEquals(0, $table->getTilesCount(Color::YELLOW));
     }
 
     public function testTake_TakeTwice_FirstPileWithMarker()

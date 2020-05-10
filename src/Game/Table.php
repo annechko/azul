@@ -6,11 +6,10 @@ use Azul\Tile\Marker;
 use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
 
-class Table
+class Table implements ITileStorage
 {
-    private $centerPile = [];
-    /** @var Marker|null */
-    private $marker;
+    private array $centerPile = [];
+    private ?Marker $marker;
 
     public function __construct(Marker $marker)
     {
@@ -24,7 +23,7 @@ class Table
         }
     }
 
-    public function getCenterPileCount($color = null): int
+    public function getTilesCount(?string $color = null): int
     {
         if ($color === null) {
             $count = 0;

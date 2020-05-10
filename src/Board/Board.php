@@ -30,9 +30,9 @@ class Board
         $this->floorLine = new TileCollection();
     }
 
-    public function placeTiles(TileCollection $tiles, string $rowNumber): void
+    public function placeTiles(TileCollection $tiles, $rowOrNumber): void
     {
-        $row = $this->getRow($rowNumber);
+        $row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
         for ($j = 0; $j < $tiles->count() - $row->getEmptySlotsCount(); $j++) {
             $this->floorLine->push($tiles->pop());
         }
@@ -54,5 +54,19 @@ class Board
     {
         $row = $this->getRow($rowNumber);
         return $row->getTilesCount();
+    }
+
+    /**
+     * @return BoardRow[]
+     */
+    public function getRows(): array
+    {
+        return [
+            $this->row1,
+            $this->row2,
+            $this->row3,
+            $this->row4,
+            $this->row5,
+        ];
     }
 }

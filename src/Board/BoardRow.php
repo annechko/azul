@@ -30,18 +30,28 @@ class BoardRow
 
     public function addTile(Tile $tile): void
     {
-        if ($this->tiles->count() + 1 > $this->maxTiles) {
+        if ($this->getTilesCount() + 1 > $this->maxTiles) {
             throw new BoardRowSizeExceededException();
         }
-        if ($this->tiles->count() > 0 && !$this->tiles->bottom()->isSameColor($tile->getColor())) {
+        if ($this->getTilesCount() > 0 && !$this->isMainColor($tile->getColor())) {
             throw new BoardRowVariousColorsException();
         }
         $this->tiles->push($tile);
     }
 
+    public function getMainColor(): string
+    {
+        return $this->getTilesCount() ? $this->tiles->bottom()->getColor() : '';
+    }
+
+    public function isMainColor(string $color): bool
+    {
+        return $this->getTilesCount() === 0 ? true : $this->getMainColor() === $color;
+    }
+
     public function getEmptySlotsCount(): int
     {
-        return $this->maxTiles - $this->tiles->count();
+        return $this->maxTiles - $this->getTilesCount();
     }
 
     public function getTilesCount(): int

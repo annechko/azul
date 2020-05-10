@@ -21,9 +21,9 @@ class FactoryTest extends BaseUnit
                 new Tile(Color::BLACK),
             ])
         );
-        $this->assertEquals(0, $table->getCenterPileCount());
+        $this->assertEquals(0, $table->getTilesCount());
         $factory->take(Color::RED);
-        $this->assertEquals(1, $table->getCenterPileCount());
+        $this->assertEquals(1, $table->getTilesCount());
     }
 
     public function testTake_NoExistedColor_Exception()

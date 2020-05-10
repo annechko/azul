@@ -6,7 +6,7 @@ use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
 
-class Factory
+class Factory implements ITileStorage
 {
     /** @var Tile[] */
     private TileCollection $tiles;

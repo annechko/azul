@@ -24,7 +24,7 @@ class GameRound
         foreach ($this->factories as $factory) {
             $factoriesTileCount += $factory->getTilesCount();
         }
-        return $this->table->getCenterPileCount() > 0 || $factoriesTileCount > 0;
+        return $this->table->getTilesCount() > 0 || $factoriesTileCount > 0;
     }
 
     public function getFactories(): array

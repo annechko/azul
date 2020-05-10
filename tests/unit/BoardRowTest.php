@@ -54,4 +54,12 @@ class BoardRowTest extends BaseUnit
         $b->addTiles(new TileCollection([new Tile(Color::RED), new Tile(Color::RED), new Tile(Color::RED)]));
         $this->assertEquals(2, $b->getEmptySlotsCount());
     }
+
+    public function testIsMainColor_NoTiles_AnyColorIsMain()
+    {
+        $b = new BoardRow(1);
+        foreach (Color::getAll() as $color) {
+            $this->assertTrue($b->isMainColor($color));
+        }
+    }
 }
