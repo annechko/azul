@@ -6,6 +6,7 @@ use Azul\Board\Exception\BoardRowSizeExceededException;
 use Azul\Board\Exception\BoardRowVariousColorsException;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
+use Webmozart\Assert\Assert;
 
 class BoardRow
 {
@@ -14,6 +15,7 @@ class BoardRow
 
     public function __construct(int $maxTiles)
     {
+        Assert::range($maxTiles, 1, 5);
         $this->maxTiles = $maxTiles;
         $this->tiles = new TileCollection();
     }
@@ -57,5 +59,21 @@ class BoardRow
     public function getTilesCount(): int
     {
         return $this->tiles->count();
+    }
+
+    public function getName(): string
+    {
+        switch ($this->maxTiles) {
+            case 1:
+                return Board::ROW_1;
+            case 2:
+                return Board::ROW_2;
+            case 3:
+                return Board::ROW_3;
+            case 4:
+                return Board::ROW_4;
+            case 5:
+                return Board::ROW_5;
+        }
     }
 }

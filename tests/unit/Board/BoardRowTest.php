@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Board;
 
 use Azul\Board\BoardRow;
 use Azul\Board\Exception\BoardRowSizeExceededException;
@@ -8,6 +8,7 @@ use Azul\Board\Exception\BoardRowVariousColorsException;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
+use Tests\BaseUnit;
 
 class BoardRowTest extends BaseUnit
 {

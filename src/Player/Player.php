@@ -45,10 +45,6 @@ class Player
                     $this->board->placeTiles($storage->take($color), $row);
                     return true;
                 }
-                if ($row->getTilesCount() === 0) {
-                    $this->board->placeTiles($storage->take($color), $row);
-                    return true;
-                }
             }
         }
         return false;
