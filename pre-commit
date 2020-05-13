@@ -1,12 +1,4 @@
 #!/usr/bin/env php
 <?php
 
-exec('git status -s', $changedFiles);
-
-foreach ($changedFiles as $fileName) {
-	$fileName = trim(strstr($fileName, ' '));
-	if (preg_match('/\.php$/', $fileName) && is_file($fileName)) {
-		exec('./bin/php-cs-fixer fix -q ' . $fileName, $output, $code);
-	}
-}
-exit(0);
+exec('./bin/php-cs-fixer fix');
