@@ -36,6 +36,7 @@ return PhpCsFixer\Config::create()
 			'no_unused_imports' => true,
 			'ordered_imports' => true,
 			'new_with_braces' => true,
+			'single_blank_line_at_eof' => false,
 		]
 	)
 	->setIndent("\t")
