@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Azul\Board;
 
@@ -56,9 +57,9 @@ class BoardWall
         }
     }
 
-    public function placeTiles(BoardRow $row): void
+    public function fillColor(BoardRow $row): void
     {
-        if ($this->pattern[$row->getName()][$row->getMainColor()]) {
+        if ($this->isColorFilledByRow($row)) {
             throw new BoardWallColorAlreadyFilledException();
         }
         $this->pattern[$row->getName()][$row->getMainColor()] = true;
@@ -69,8 +70,13 @@ class BoardWall
         return !in_array(false, $this->pattern[$rowNumber], true);
     }
 
-    public function isColorFilled(string $color, int $rowNumber): bool
+    public function isColorFilled(string $color, int $row): bool
     {
-        return $this->pattern[$rowNumber][$color];
+        return $this->pattern[$row][$color];
+    }
+
+    public function isColorFilledByRow(BoardRow $row): bool
+    {
+        return $this->isColorFilled($row->getMainColor(), $row->getName());
     }
 }

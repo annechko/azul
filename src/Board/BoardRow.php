@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Azul\Board;
 
@@ -61,7 +62,7 @@ class BoardRow
         return $this->tiles->count();
     }
 
-    public function getName(): string
+    public function getName(): int
     {
         switch ($this->maxTiles) {
             case 1:
@@ -75,5 +76,15 @@ class BoardRow
             case 5:
                 return Board::ROW_5;
         }
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->getTilesCount() === $this->maxTiles;
+    }
+
+    public function getTiles(): TileCollection
+    {
+        return $this->tiles;
     }
 }

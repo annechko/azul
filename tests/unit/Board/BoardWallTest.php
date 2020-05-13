@@ -19,7 +19,7 @@ class BoardWallTest extends BaseUnit
         foreach (Color::getAll() as $color) {
             $row = new BoardRow(1);
             $row->addTile(new Tile($color));
-            $wall->placeTiles($row);
+            $wall->fillColor($row);
         }
         $this->assertTrue($wall->isCompleted(Board::ROW_1));
     }
@@ -29,9 +29,9 @@ class BoardWallTest extends BaseUnit
         $wall = new BoardWall();
         $row = new BoardRow(1);
         $row->addTile(new Tile(Color::RED));
-        $wall->placeTiles($row);
+        $wall->fillColor($row);
         $this->expectException(BoardWallColorAlreadyFilledException::class);
-        $wall->placeTiles($row);
+        $wall->fillColor($row);
     }
 
     public function testIsColorFilled_PlaceRed_True(): void
@@ -39,8 +39,8 @@ class BoardWallTest extends BaseUnit
         $wall = new BoardWall();
         $row = new BoardRow(1);
         $row->addTile(new Tile(Color::RED));
-        $wall->placeTiles($row);
-        $this->assertTrue($wall->isColorFilled(Color::RED, Board::ROW_1));
+        $wall->fillColor($row);
+        $this->assertTrue($wall->isColorFilledByRow($row));
     }
 
     public function testIsColorFilled_NothingPlaced_False(): void

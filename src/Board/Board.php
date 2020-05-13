@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Azul\Board;
 
+use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
 
@@ -13,15 +15,18 @@ class Board
     public const ROW_4 = 4;
     public const ROW_5 = 5;
 
+    private BoardWall $wall;
+    private TileCollection $floorLine;
+
     private BoardRow $row1;
     private BoardRow $row2;
     private BoardRow $row3;
     private BoardRow $row4;
     private BoardRow $row5;
-    private TileCollection $floorLine;
 
     public function __construct()
     {
+        $this->wall = new BoardWall();
         $this->row1 = new BoardRow(1);
         $this->row2 = new BoardRow(2);
         $this->row3 = new BoardRow(3);
@@ -33,20 +38,31 @@ class Board
     public function placeTiles(TileCollection $tiles, $rowOrNumber): void
     {
         $row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
-        if ($tiles->bottom()->isFirstPlayerMarker()) {
-            $this->floorLine->push($tiles->pop());
+        if ($tiles->top()->isFirstPlayerMarker()) {
+            $this->placeOnFloor($tiles->pop());
         }
         $extraCount = $tiles->count() - $row->getEmptySlotsCount();
         for ($j = 0; $j < $extraCount; $j++) {
-            $this->floorLine->push($tiles->pop());
+            $this->placeOnFloor($tiles->pop());
         }
         $row->placeTiles($tiles);
     }
 
-    private function getRow(string $rowNumber): BoardRow
+    private function getRow(int $rowNumber): BoardRow
     {
         Assert::range($rowNumber, 1, 5);
-        return $this->{'row' . $rowNumber};
+        switch ($rowNumber) {
+            case 1:
+                return $this->row1;
+            case 2:
+                return $this->row2;
+            case 3:
+                return $this->row3;
+            case 4:
+                return $this->row4;
+            case 5:
+                return $this->row5;
+        }
     }
 
     public function getFloorTilesCount(): int
@@ -72,5 +88,39 @@ class Board
             $this->row4,
             $this->row5,
         ];
+    }
+
+    public function doWallTiling(): void
+    {
+        foreach ($this->getRows() as $row) {
+            if ($row->isCompleted()) {
+                if (!$this->wall->isColorFilledByRow($row)) {
+                    $this->wall->fillColor($row);
+                } else {
+                    foreach ($row->getTiles() as $tile) {
+                        $this->placeOnFloor($tile);
+                    }
+                }
+            }
+        }
+    }
+
+    private function placeOnFloor(Tile $tile): void
+    {
+        $this->floorLine->push($tile);
+    }
+
+    public function discardTiles(): TileCollection
+    {
+        $tiles = new TileCollection();
+        foreach ($this->getRows() as $row) {
+            foreach ($row->getTiles()->takeAllTiles() as $tile) {
+                $tiles->addTile($tile);
+            }
+        }
+        foreach ($this->floorLine->takeAllTiles() as $tile) {
+            $tiles->addTile($tile);
+        }
+        return $tiles;
     }
 }

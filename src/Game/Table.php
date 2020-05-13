@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Azul\Game;
 
@@ -11,7 +12,7 @@ class Table implements ITileStorage
     private array $centerPile = [];
     private ?Marker $marker;
 
-    public function __construct(Marker $marker)
+    public function __construct(?Marker $marker)
     {
         $this->marker = $marker;
     }

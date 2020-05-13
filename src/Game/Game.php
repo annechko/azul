@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Azul\Game;
 
@@ -36,6 +37,7 @@ class Game
                 $this->round = null;
                 foreach ($players as $player) {
                     $player->doWallTiling();
+                    $this->bag->discardTiles($player->getDiscardedTiles());
                 }
             }
         }

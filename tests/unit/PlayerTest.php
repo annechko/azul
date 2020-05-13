@@ -49,4 +49,20 @@ class PlayerTest extends BaseUnit
         $this->assertContains(1, $counts);
         $this->assertEquals(0, $t->getTilesCount());
     }
+
+    public function testAct_FullRowsTableHasTiles_TilePlacedOnFloor()
+    {
+        $player = new Player($board = new Board());
+        $board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_1);
+        $board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_2);
+        $board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_3);
+        $board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_4);
+        $board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_5);
+        $t = $this->tester->createGameTable(null);
+        $t->addToCenterPile(new TileCollection([new Tile(Color::RED),]));
+
+        $this->assertEquals(0, $board->getFloorTilesCount());
+        $player->act([new Factory($t, new TileCollection())], $t);
+        $this->assertEquals(1, $board->getFloorTilesCount());
+    }
 }

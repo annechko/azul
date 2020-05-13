@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Azul\Command;
 
 use Symfony\Component\Console\Command\Command;
