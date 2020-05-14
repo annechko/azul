@@ -66,7 +66,7 @@ class Player
 
 	public function isGameOver(): bool
 	{
-		return false;
+		return $this->board->isAnyWallRowCompleted();
 	}
 
 	public function getDiscardedTiles(): TileCollection

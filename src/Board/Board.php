@@ -25,9 +25,9 @@ class Board
 	private BoardRow $row4;
 	private BoardRow $row5;
 
-	public function __construct()
+	public function __construct(?BoardWall $wall = null)
 	{
-		$this->wall = new BoardWall();
+		$this->wall = $wall ?? new BoardWall();
 		$this->row1 = new BoardRow(1);
 		$this->row2 = new BoardRow(2);
 		$this->row3 = new BoardRow(3);
@@ -123,5 +123,15 @@ class Board
 			$tiles->addTile($tile);
 		}
 		return $tiles;
+	}
+
+	public function isAnyWallRowCompleted(): bool
+	{
+		foreach ($this->getRows() as $row) {
+			if ($this->wall->isCompleted($row->getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
