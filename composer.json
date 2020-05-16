@@ -7,8 +7,9 @@
     },
     "require": {
         "php": "^7.4",
-        "symfony/console": "^4.4",
-        "beberlei/assert": "^3.2"
+        "beberlei/assert": "^3.2",
+        "symfony/event-dispatcher": "^5.0",
+        "symfony/console": "^5.0"
     },
     "bin": [
         "azul"
