@@ -10,13 +10,11 @@ use Azul\Tile\Marker;
 class Game
 {
 	private Bag $bag;
-	private Marker $marker;
 	private ?GameRound $round = null;
 
-	public function __construct(Bag $bag, Marker $marker)
+	public function __construct(Bag $bag)
 	{
 		$this->bag = $bag;
-		$this->marker = $marker;
 	}
 
 	public function play(PlayerCollection $players): void
@@ -25,7 +23,7 @@ class Game
 			if (!$this->round) {
 				foreach ($players as $player) {
 					if ($player->isGameOver()) {
-						break;
+						return;
 					}
 				}
 				$this->round = $this->createRound($players);
@@ -46,7 +44,7 @@ class Game
 
 	private function createRound(PlayerCollection $players): GameRound
 	{
-		$table = new Table($this->marker);
+		$table = new Table(new Marker());
 		return new GameRound(
 			$table,
 			[
