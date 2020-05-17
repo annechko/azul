@@ -37,6 +37,9 @@ return PhpCsFixer\Config::create()
 			'ordered_imports' => true,
 			'new_with_braces' => true,
 			'single_blank_line_at_eof' => false,
+			'single_line_comment_style' => [
+				'comment_types' => ['asterisk'],
+			],
 		]
 	)
 	->setIndent("\t")

@@ -36,6 +36,17 @@ class Board
 		$this->floorLine = new TileCollection();
 	}
 
+	public static function getRowNumbers(): array
+	{
+		return [
+			self::ROW_1,
+			self::ROW_2,
+			self::ROW_3,
+			self::ROW_4,
+			self::ROW_5,
+		];
+	}
+
 	public function placeTiles(TileCollection $tiles, $rowOrNumber): void
 	{
 		$row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
@@ -49,7 +60,7 @@ class Board
 		$row->placeTiles($tiles);
 	}
 
-	private function getRow(int $rowNumber): BoardRow
+	public function getRow(int $rowNumber): BoardRow
 	{
 		Assert::range($rowNumber, 1, 5);
 		switch ($rowNumber) {

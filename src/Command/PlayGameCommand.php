@@ -32,12 +32,16 @@ class PlayGameCommand extends Command
 	{
 		$output->writeln('Let\'s start!');
 
-		$players = new PlayerCollection([new Player(new Board(), 'Ivan', ), new Player(new Board(), 'Petr', )]);
+		$players = new PlayerCollection([
+			new Player(new Board(), 'Ivan', ),
+			new Player(new Board(), 'Petr', ),
+		]);
 		$bag = new Bag((new TileFactory())->createGameTiles());
-		$dispatcher = new EventDispatcher();
-		$dispatcher->addSubscriber(new ConsoleReporter(new ConsoleOutput()));
 
+		$dispatcher = new EventDispatcher();
+		$dispatcher->addSubscriber(new ConsoleReporter($players, new ConsoleOutput()));
 		$game = new Game($bag, $dispatcher);
+
 		$game->play($players);
 
 		return 0;

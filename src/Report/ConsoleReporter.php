@@ -9,6 +9,7 @@ use Azul\Event\PlayerFinishTurnEvent;
 use Azul\Event\RoundCreatedEvent;
 use Azul\Event\WallTiledEvent;
 use Azul\Player\Player;
+use Azul\Player\PlayerCollection;
 use Azul\Tile\Color;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,10 +17,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConsoleReporter implements EventSubscriberInterface
 {
 	private OutputInterface $output;
+	private \Azul\Game\GameRound $round;
+	/** @var Player[] */
+	private array $players;
 
-	public function __construct(OutputInterface $output)
+	public function __construct(PlayerCollection $players, OutputInterface $output)
 	{
 		$this->output = $output;
+		foreach ($players as $player) {
+			$this->setPlayer($player);
+		}
 	}
 
 	/** {@inheritdoc} */
@@ -34,44 +41,20 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	public function onRoundCreated(RoundCreatedEvent $event): void
 	{
-		$this->drawFactories($event->getRound()->getFactories());
-		$this->drawTable($event->getRound()->getTable());
+		$this->round = $event->getRound();
+		$this->drawReport();
 	}
 
 	public function onPlayerFinishTurn(PlayerFinishTurnEvent $event): void
 	{
-		$round = $event->getRound();
-		$player = $event->getPlayer();
-		$this->writeln('test - onPlayerFinishTurn');
-		$this->drawFactories($round->getFactories());
-		$this->drawTable($round->getTable());
-		$this->drawPlayerBoard($player);
+		$this->round = $event->getRound();
+		$this->setPlayer($event->getPlayer());
+		$this->drawReport();
 	}
 
-	private function drawPlayerBoard(Player $player): void
+	private function setPlayer(Player $player): void
 	{
-		$this->writeln('', false);
-		$this->writeln('player ' . $player->getName(), false);
-
-		$this->drawPlayerBoardPatternLines($player->getBoard());
-		$this->writeln('', false);
-
-		foreach ($player->getBoard()->getFloorTiles() as $tile) {
-			$this->drawTile($tile);
-		}
-	}
-
-	private function drawPlayerBoardPatternLines(Board $board): void
-	{
-		foreach ($board->getRows() as $row) {
-			foreach ($row->getTiles() as $tile) {
-				$this->drawTile($tile);
-			}
-			for ($j = 0; $j < $row->getEmptySlotsCount(); $j++) {
-				$this->write('.', false);
-			}
-			$this->writeln('', false);
-		}
+		$this->players[spl_object_hash($player)] = $player;
 	}
 
 	public function onWallTiled(WallTiledEvent $event): void
@@ -79,20 +62,14 @@ class ConsoleReporter implements EventSubscriberInterface
 		$this->writeln('test - onWallTiled');
 	}
 
-	private function writeln(string $message, bool $wait = true): void
+	private function writeln(string $message): void
 	{
 		$this->output->writeln($message);
-		if ($wait) {
-			usleep(1000000 / 2);
-		}
 	}
 
-	private function write(string $message, $wait = true): void
+	private function write(string $message): void
 	{
 		$this->output->write($message);
-		if ($wait) {
-			usleep(1000000 / 2);
-		}
 	}
 
 	private function getColorSymbol(string $color): string
@@ -116,19 +93,19 @@ class ConsoleReporter implements EventSubscriberInterface
 	private function drawFactories(\Azul\Game\FactoryCollection $factories): void
 	{
 		foreach ($factories as $factory) {
-			$this->write('_', false);
+			$this->write('|_');
 			foreach ($factory->getTiles() as $tile) {
 				$this->drawTile($tile);
 			}
-			$this->write('_', false);
-			$this->write('   ', false);
+			$this->write('_|');
+			$this->write('   ');
 		}
 		$this->writeln('');
 	}
 
 	private function drawTable(\Azul\Game\Table $table): void
 	{
-		$this->write('_', false);
+		$this->write('_');
 		if ($table->getMarker()) {
 			$this->drawTile($table->getMarker());
 		}
@@ -137,12 +114,54 @@ class ConsoleReporter implements EventSubscriberInterface
 				$this->drawTile($tile);
 			}
 		}
-		$this->write('_', false);
+		$this->write('_');
 		$this->writeln('');
 	}
 
 	private function drawTile(\Azul\Tile\Tile $tile): void
 	{
-		$this->write($this->getColorSymbol($tile->getColor()), false);
+		$this->write($this->getColorSymbol($tile->getColor()));
+	}
+
+	private function drawReport(): void
+	{
+		$this->drawFactories($this->round->getFactories());
+		$this->drawTable($this->round->getTable());
+		$this->drawPlayers();
+		$this->writeln(str_repeat('_', 72));
+		$this->wait();
+	}
+
+	private function drawPlayers(): void
+	{
+		# board
+		foreach (Board::getRowNumbers() as $rowNumber) {
+			foreach ($this->players as $player) {
+				$row = $player->getBoard()->getRow($rowNumber);
+				foreach ($row->getTiles() as $tile) {
+					$this->drawTile($tile);
+				}
+				for ($j = 0; $j < $row->getEmptySlotsCount(); $j++) {
+					$this->write('.');
+				}
+				$this->write("\t\t\t");
+			}
+			$this->writeln('');
+		}
+		$this->writeln('');
+
+		# floor
+		foreach ($this->players as $player) {
+			foreach ($player->getBoard()->getFloorTiles() as $tile) {
+				$this->drawTile($tile);
+			}
+			$this->write("\t\t\t");
+		}
+		$this->writeln('');
+	}
+
+	private function wait(): void
+	{
+		usleep(3000000);
 	}
 }
