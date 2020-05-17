@@ -48,4 +48,9 @@ class Factory implements ITileStorage
 		}
 		return $c;
 	}
+
+	public function getTiles(): TileCollection
+	{
+		return $this->tiles;
+	}
 }

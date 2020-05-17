@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Azul\Game;
 
-use Webmozart\Assert\Assert;
-
 class GameRound
 {
-	/** @var Factory[] */
-	private array $factories;
+	private FactoryCollection $factories;
 	private Table $table;
 
 	public function __construct(?Table $table, array $factories)
 	{
-		Assert::allIsInstanceOf($factories, Factory::class);
 		$this->table = $table;
-		$this->factories = $factories;
+		$this->factories = new FactoryCollection($factories);
 	}
 
 	public function canContinue(): bool
@@ -28,7 +24,7 @@ class GameRound
 		return $this->table->getTilesCount() > 0 || $factoriesTileCount > 0;
 	}
 
-	public function getFactories(): array
+	public function getFactories(): FactoryCollection
 	{
 		return $this->factories;
 	}

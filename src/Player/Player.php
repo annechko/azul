@@ -6,7 +6,7 @@ namespace Azul\Player;
 
 use Azul\Board\Board;
 use Azul\Board\BoardRow;
-use Azul\Game\Factory;
+use Azul\Game\FactoryCollection;
 use Azul\Game\ITileStorage;
 use Azul\Game\Table;
 use Azul\Tile\Color;
@@ -15,17 +15,15 @@ use Azul\Tile\TileCollection;
 class Player
 {
 	private Board $board;
+	private string $name;
 
-	public function __construct(Board $board)
+	public function __construct(Board $board, string $name = '')
 	{
 		$this->board = $board;
+		$this->name = $name;
 	}
 
-	/**
-	 * @param Factory[] $factories
-	 * @param Table $table
-	 */
-	public function act(array $factories, Table $table): void
+	public function act(FactoryCollection $factories, Table $table): void
 	{
 		foreach ([false, true] as $force) {
 			foreach (Color::getAll() as $color) {
@@ -72,5 +70,15 @@ class Player
 	public function getDiscardedTiles(): TileCollection
 	{
 		return $this->board->discardTiles();
+	}
+
+	public function getBoard(): Board
+	{
+		return $this->board;
+	}
+
+	public function getName(): string
+	{
+		return $this->name;
 	}
 }

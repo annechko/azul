@@ -21,7 +21,10 @@ class Table implements ITileStorage
 	public function addToCenterPile(TileCollection $tiles): void
 	{
 		foreach ($tiles as $tile) {
-			$this->centerPile[$tile->getColor()][] = $tile;
+			if (!array_key_exists($tile->getColor(), $this->centerPile)) {
+				$this->centerPile[$tile->getColor()] = new TileCollection();
+			}
+			$this->centerPile[$tile->getColor()]->addTile($tile);
 		}
 	}
 
@@ -30,22 +33,32 @@ class Table implements ITileStorage
 		if ($color === null) {
 			$count = 0;
 			foreach ($this->centerPile as $tiles) {
-				$count += count($tiles);
+				$count += $tiles->count();
 			}
 			return $count;
 		}
-		return count($this->centerPile[$color] ?? []);
+		return array_key_exists($color, $this->centerPile) ? $this->centerPile[$color]->count() : 0;
 	}
 
 	public function take(string $color): TileCollection
 	{
 		Assert::notEmpty($this->centerPile[$color]);
-		$tiles = new TileCollection($this->centerPile[$color]);
+		$tiles = $this->centerPile[$color]->takeAllTiles();
 		if ($this->marker) {
-			$tiles[] = $this->marker;
+			$tiles->addTile($this->marker);
 			$this->marker = null;
 		}
 		unset($this->centerPile[$color]);
 		return $tiles;
+	}
+
+	public function getCenterPileTiles(): array
+	{
+		return $this->centerPile;
+	}
+
+	public function getMarker(): ?Marker
+	{
+		return $this->marker;
 	}
 }

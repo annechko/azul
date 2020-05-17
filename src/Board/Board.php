@@ -134,4 +134,9 @@ class Board
 		}
 		return false;
 	}
+
+	public function getFloorTiles(): TileCollection
+	{
+		return $this->floorLine;
+	}
 }
