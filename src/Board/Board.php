@@ -126,8 +126,10 @@ class Board
 	{
 		$tiles = new TileCollection();
 		foreach ($this->getRows() as $row) {
-			foreach ($row->getTiles()->takeAllTiles() as $tile) {
-				$tiles->addTile($tile);
+			if ($row->isCompleted()) {
+				foreach ($row->getTiles()->takeAllTiles() as $tile) {
+					$tiles->addTile($tile);
+				}
 			}
 		}
 		foreach ($this->floorLine->takeAllTiles() as $tile) {

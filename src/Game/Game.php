@@ -16,7 +16,7 @@ class Game
 {
 	private Bag $bag;
 	private ?GameRound $round = null;
-	private EventDispatcher $dispatcher;
+	private ?EventDispatcher $dispatcher;
 
 	public function __construct(Bag $bag, ?EventDispatcher $dispatcher = null)
 	{
@@ -46,7 +46,7 @@ class Game
 				foreach ($players as $player) {
 					$player->doWallTiling();
 					$this->dispatch(new WallTiledEvent($player));
-					$this->bag->discardTiles($player->getDiscardedTiles());
+					$this->bag->discardTiles($player->discardTiles());
 				}
 			}
 		}

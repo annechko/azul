@@ -67,7 +67,7 @@ class Player
 		return $this->board->isAnyWallRowCompleted();
 	}
 
-	public function getDiscardedTiles(): TileCollection
+	public function discardTiles(): TileCollection
 	{
 		return $this->board->discardTiles();
 	}
