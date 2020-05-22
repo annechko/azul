@@ -2,11 +2,11 @@
 
 namespace Tests;
 
+use Azul\Board\Board;
 use Azul\Board\BoardRow;
 use Azul\Board\BoardWall;
 use Azul\Game\Factory;
 use Azul\Player\Player;
-use Azul\Board\Board;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
@@ -17,7 +17,7 @@ class PlayerTest extends BaseUnit
 	{
 		$player = new Player($board = new Board());
 		$t = $this->tester->createGameTable();
-		$factory = new Factory($t, new TileCollection([new Tile(Color::BLUE),]));
+		$factory = new Factory($t, new TileCollection([new Tile(Color::BLUE)]));
 		foreach ($board->getRows() as $row) {
 			$this->assertEquals(0, $row->getTilesCount());
 		}
@@ -36,7 +36,7 @@ class PlayerTest extends BaseUnit
 	{
 		$player = new Player($board = new Board());
 		$t = $this->tester->createGameTable();
-		$t->addToCenterPile(new TileCollection([new Tile(Color::BLUE),]));
+		$t->addToCenterPile(new TileCollection([new Tile(Color::BLUE)]));
 
 		foreach ($board->getRows() as $row) {
 			$this->assertEquals(0, $row->getTilesCount());
@@ -55,13 +55,13 @@ class PlayerTest extends BaseUnit
 	public function testAct_FullRowsTableHasTiles_TilePlacedOnFloor(): void
 	{
 		$player = new Player($board = new Board());
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_1);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_2);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_3);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_4);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE),]), Board::ROW_5);
+		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_1);
+		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_2);
+		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_3);
+		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_4);
+		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_5);
 		$t = $this->tester->createGameTable(null);
-		$t->addToCenterPile(new TileCollection([new Tile(Color::RED),]));
+		$t->addToCenterPile(new TileCollection([new Tile(Color::RED)]));
 
 		$this->assertEquals(0, $board->getFloorTilesCount());
 		$player->act([new Factory($t, new TileCollection())], $t);

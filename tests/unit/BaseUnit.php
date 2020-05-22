@@ -6,6 +6,5 @@ use Codeception\Test\Unit;
 
 abstract class BaseUnit extends Unit
 {
-    /** @var \UnitTester */
-    protected $tester;
+	protected \UnitTester $tester;
 }

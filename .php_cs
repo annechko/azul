@@ -2,10 +2,13 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-	->in(['.'.DIRECTORY_SEPARATOR . 'src']);
+	->in([
+		'.' . DIRECTORY_SEPARATOR . 'src',
+		'.' . DIRECTORY_SEPARATOR . 'tests',
+	]);
 
 return PhpCsFixer\Config::create()
-	->setCacheFile('.'.DIRECTORY_SEPARATOR . '.php_cs.cache')
+	->setCacheFile('.' . DIRECTORY_SEPARATOR . '.php_cs.cache')
 	->setRules(
 		[
 			'@Symfony' => true,
