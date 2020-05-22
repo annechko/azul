@@ -52,14 +52,23 @@ class ConsoleReporter implements EventSubscriberInterface
 		$this->drawReport();
 	}
 
-	private function setPlayer(Player $player): void
-	{
-		$this->players[spl_object_hash($player)] = $player;
-	}
-
 	public function onWallTiled(WallTiledEvent $event): void
 	{
 		$this->writeln('test - onWallTiled');
+	}
+
+	private function drawReport(): void
+	{
+		$this->drawFactories($this->round->getFactories());
+		$this->drawTable($this->round->getTable());
+		$this->drawPlayers();
+		$this->writeln(str_repeat('_', 72));
+		$this->wait();
+	}
+
+	private function setPlayer(Player $player): void
+	{
+		$this->players[spl_object_hash($player)] = $player;
 	}
 
 	private function writeln(string $message): void
@@ -121,15 +130,6 @@ class ConsoleReporter implements EventSubscriberInterface
 	private function drawTile(\Azul\Tile\Tile $tile): void
 	{
 		$this->write($this->getColorSymbol($tile->getColor()));
-	}
-
-	private function drawReport(): void
-	{
-		$this->drawFactories($this->round->getFactories());
-		$this->drawTable($this->round->getTable());
-		$this->drawPlayers();
-		$this->writeln(str_repeat('_', 72));
-		$this->wait();
 	}
 
 	private function drawPlayers(): void

@@ -13,7 +13,7 @@ class Table implements ITileStorage
 	private array $centerPile = [];
 	private ?Marker $marker;
 
-	public function __construct(?Marker $marker)
+	public function __construct(?Marker $marker = null)
 	{
 		$this->marker = $marker;
 	}

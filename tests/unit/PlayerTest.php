@@ -6,6 +6,7 @@ use Azul\Board\Board;
 use Azul\Board\BoardRow;
 use Azul\Board\BoardWall;
 use Azul\Game\Factory;
+use Azul\Game\FactoryCollection;
 use Azul\Player\Player;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
@@ -22,7 +23,7 @@ class PlayerTest extends BaseUnit
 			$this->assertEquals(0, $row->getTilesCount());
 		}
 
-		$player->act([$factory], $t);
+		$player->act(new FactoryCollection([$factory]), $t);
 
 		$counts = [];
 		foreach ($board->getRows() as $row) {
@@ -42,7 +43,7 @@ class PlayerTest extends BaseUnit
 			$this->assertEquals(0, $row->getTilesCount());
 		}
 
-		$player->act([new Factory($t, new TileCollection())], $t);
+		$player->act(new FactoryCollection([new Factory($t, new TileCollection())]), $t);
 
 		$counts = [];
 		foreach ($board->getRows() as $row) {
@@ -64,7 +65,7 @@ class PlayerTest extends BaseUnit
 		$t->addToCenterPile(new TileCollection([new Tile(Color::RED)]));
 
 		$this->assertEquals(0, $board->getFloorTilesCount());
-		$player->act([new Factory($t, new TileCollection())], $t);
+		$player->act(new FactoryCollection([new Factory($t, new TileCollection())]), $t);
 		$this->assertEquals(1, $board->getFloorTilesCount());
 	}
 
@@ -73,7 +74,7 @@ class PlayerTest extends BaseUnit
 		$wall = new BoardWall();
 		foreach (Color::getAll() as $color) {
 			$row = new BoardRow(1);
-			$row->addTile(new Tile($color));
+			$row->placeTiles(new TileCollection([new Tile($color)]));
 			$wall->fillColor($row);
 		}
 		$player = new Player($board = new Board($wall));
@@ -89,7 +90,7 @@ class PlayerTest extends BaseUnit
 		foreach (Color::getAll() as $color) {
 			$colorsCount++;
 			$row = new BoardRow(1);
-			$row->addTile(new Tile($color));
+			$row->placeTiles(new TileCollection([new Tile($color)]));
 			$wall->fillColor($row);
 			$player = new Player($board = new Board($wall));
 
@@ -99,41 +100,5 @@ class PlayerTest extends BaseUnit
 				$this->assertFalse($player->isGameOver());
 			}
 		}
-	}
-
-	public function testGetDiscardedTiles_RowsFull_AllTilesDiscarded(): void
-	{
-		$player = new Player($board = new Board());
-		$board->placeTiles($this->buildTiles(1), Board::ROW_1);
-		$board->placeTiles($this->buildTiles(2), Board::ROW_2);
-		$board->placeTiles($this->buildTiles(3), Board::ROW_3);
-		$board->placeTiles($this->buildTiles(4), Board::ROW_4);
-		$board->placeTiles($this->buildTiles(5), Board::ROW_5);
-		$tiles = $player->discardTiles();
-		$this->assertCount(15, $tiles);
-	}
-
-	public function testGetDiscardedTiles_EmptyRows_NoTilesDiscarded(): void
-	{
-		$player = new Player($board = new Board());
-		$tiles = $player->discardTiles();
-		$this->assertCount(0, $tiles);
-	}
-
-	public function testGetDiscardedTiles_2Row1Tile_1TileDiscarded(): void
-	{
-		$rowNumber = Board::ROW_2;
-		$player = new Player($board = new Board());
-		$board->placeTiles($this->buildTiles(1), $rowNumber);
-
-		$this->assertEquals(1, $board->getRowTilesCount($rowNumber));
-		$tiles = $player->discardTiles();
-		$this->assertCount(0, $tiles);
-		$this->assertEquals(1, $board->getRowTilesCount($rowNumber));
-	}
-
-	private function buildTiles(int $numberOfTiles): TileCollection
-	{
-		return new TileCollection(array_fill(1, $numberOfTiles, new Tile(Color::BLUE)));
 	}
 }

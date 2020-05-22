@@ -32,7 +32,7 @@ class BoardRow
 		}
 	}
 
-	public function addTile(Tile $tile): void
+	private function addTile(Tile $tile): void
 	{
 		if ($this->getTilesCount() + 1 > $this->maxTiles) {
 			throw new BoardRowSizeExceededException();

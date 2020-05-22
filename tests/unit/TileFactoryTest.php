@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Azul\Tile\Color;
-use Azul\Tile\Tile;
+use Azul\Tile\TileCollection;
 use Azul\Tile\TileFactory;
 
 class TileFactoryTest extends BaseUnit
@@ -61,10 +61,7 @@ class TileFactoryTest extends BaseUnit
 		$this->assertEquals(20, $count);
 	}
 
-	/**
-	 * @return Tile[]
-	 */
-	private function createTiles(): void
+	private function createTiles(): TileCollection
 	{
 		return (new TileFactory())->createGameTiles();
 	}

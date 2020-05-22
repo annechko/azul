@@ -22,9 +22,9 @@ class BoardRowTest extends BaseUnit
 	public function testAddTile_ExceedMaxSize_GotException(): void
 	{
 		$b = new BoardRow(1);
-		$b->addTile(new Tile(Color::YELLOW));
+		$this->addTile($b, new Tile(Color::YELLOW));
 		$this->expectException(BoardRowSizeExceededException::class);
-		$b->addTile(new Tile(Color::YELLOW));
+		$this->addTile($b, new Tile(Color::YELLOW));
 	}
 
 	public function testAdd_OneTileIn2MaxSize_Okay(): void
@@ -36,9 +36,9 @@ class BoardRowTest extends BaseUnit
 	public function testAdd_TwoDifferentColors_GotException(): void
 	{
 		$b = new BoardRow(2);
-		$b->addTile(new Tile(Color::YELLOW));
+		$this->addTile($b, new Tile(Color::YELLOW));
 		$this->expectException(BoardRowVariousColorsException::class);
-		$b->addTile(new Tile(Color::RED));
+		$this->addTile($b, new Tile(Color::RED));
 	}
 
 	public function testAddTiles_DifferentColors_GotException(): void
@@ -61,5 +61,10 @@ class BoardRowTest extends BaseUnit
 		foreach (Color::getAll() as $color) {
 			$this->assertTrue($b->isMainColor($color));
 		}
+	}
+
+	private function addTile(BoardRow $row, Tile $tile): void
+	{
+		$row->placeTiles(new TileCollection([$tile]));
 	}
 }

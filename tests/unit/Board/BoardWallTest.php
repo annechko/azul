@@ -8,6 +8,7 @@ use Azul\Board\BoardWall;
 use Azul\Board\Exception\BoardWallColorAlreadyFilledException;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
+use Azul\Tile\TileCollection;
 use Tests\BaseUnit;
 
 class BoardWallTest extends BaseUnit
@@ -18,7 +19,7 @@ class BoardWallTest extends BaseUnit
 		$this->assertFalse($wall->isCompleted(Board::ROW_1));
 		foreach (Color::getAll() as $color) {
 			$row = new BoardRow(1);
-			$row->addTile(new Tile($color));
+			$this->addTile($row, new Tile($color));
 			$wall->fillColor($row);
 		}
 		$this->assertTrue($wall->isCompleted(Board::ROW_1));
@@ -28,7 +29,7 @@ class BoardWallTest extends BaseUnit
 	{
 		$wall = new BoardWall();
 		$row = new BoardRow(1);
-		$row->addTile(new Tile(Color::RED));
+		$this->addTile($row, new Tile(Color::RED));
 		$wall->fillColor($row);
 		$this->expectException(BoardWallColorAlreadyFilledException::class);
 		$wall->fillColor($row);
@@ -38,7 +39,7 @@ class BoardWallTest extends BaseUnit
 	{
 		$wall = new BoardWall();
 		$row = new BoardRow(1);
-		$row->addTile(new Tile(Color::RED));
+		$this->addTile($row, new Tile(Color::RED));
 		$wall->fillColor($row);
 		$this->assertTrue($wall->isColorFilledByRow($row));
 	}
@@ -47,11 +48,16 @@ class BoardWallTest extends BaseUnit
 	{
 		$wall = new BoardWall();
 		foreach (Color::getAll() as $color) {
-			$this->assertFalse($wall->isColorFilled($color, Board::ROW_1));
-			$this->assertFalse($wall->isColorFilled($color, Board::ROW_2));
-			$this->assertFalse($wall->isColorFilled($color, Board::ROW_3));
-			$this->assertFalse($wall->isColorFilled($color, Board::ROW_4));
-			$this->assertFalse($wall->isColorFilled($color, Board::ROW_5));
+			for ($maxTiles = 1; $maxTiles <= 5; $maxTiles++) {
+				$this->assertFalse($wall->isColorFilledByRow(
+					$this->construct(BoardRow::class, ['maxTiles' => $maxTiles], ['getMainColor' => $color])
+				));
+			}
 		}
+	}
+
+	private function addTile(BoardRow $row, Tile $tile): void
+	{
+		$row->placeTiles(new TileCollection([$tile]));
 	}
 }

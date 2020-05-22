@@ -152,4 +152,9 @@ class Board
 	{
 		return $this->floorLine;
 	}
+
+	public function isWallColorFilled(string $color, int $rowNumber): bool
+	{
+		return $this->wall->isColorFilled($color, $rowNumber);
+	}
 }

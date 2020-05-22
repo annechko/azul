@@ -22,5 +22,8 @@
     },
     "config": {
         "bin-dir": "bin/"
-    }
+    },
+	"scripts": {
+		"fix": "./bin/php-cs-fixer fix"
+	}
 }
