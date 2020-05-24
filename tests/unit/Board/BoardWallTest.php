@@ -25,6 +25,18 @@ class BoardWallTest extends BaseUnit
 		$this->assertTrue($wall->isCompleted(Board::ROW_1));
 	}
 
+	public function testFillColor_RowCompleted_TileTakenFromRow(): void
+	{
+		$wall = new BoardWall();
+		$row = new BoardRow(2);
+		$this->addTile($row, new Tile(Color::BLUE));
+		$this->addTile($row, new Tile(Color::BLUE));
+
+		$wall->fillColor($row);
+
+		$this->assertCount(1, $row->getTiles());
+	}
+
 	public function testPlaceTiles_OneColorTwoTimes_Exception(): void
 	{
 		$wall = new BoardWall();

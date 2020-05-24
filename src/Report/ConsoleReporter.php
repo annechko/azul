@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ConsoleReporter implements EventSubscriberInterface
 {
+	private const EMPTY_SLOT_SIGN = '🖤';
 	private OutputInterface $output;
 	private \Azul\Game\GameRound $round;
 	/** @var Player[] */
@@ -59,10 +60,11 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	private function drawReport(): void
 	{
+		static $roundCount = 0;
 		$this->drawFactories($this->round->getFactories());
 		$this->drawTable($this->round->getTable());
 		$this->drawPlayers();
-		$this->writeln(str_repeat('_', 72));
+		$this->writeln(str_repeat('_', 35) . ++$roundCount . str_repeat('_', 35));
 		$this->wait();
 	}
 
@@ -106,7 +108,7 @@ class ConsoleReporter implements EventSubscriberInterface
 			foreach ($factory->getTiles() as $tile) {
 				$this->drawTile($tile);
 			}
-			$this->write('_|');
+			$this->write(str_repeat('_.', 4 - $factory->getTilesCount()) . '_|');
 			$this->write('   ');
 		}
 		$this->writeln('');
@@ -114,7 +116,7 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	private function drawTable(\Azul\Game\Table $table): void
 	{
-		$this->write('_');
+		$this->write('table -> _');
 		if ($table->getMarker()) {
 			$this->drawTile($table->getMarker());
 		}
@@ -142,9 +144,20 @@ class ConsoleReporter implements EventSubscriberInterface
 					$this->drawTile($tile);
 				}
 				for ($j = 0; $j < $row->getEmptySlotsCount(); $j++) {
-					$this->write('.');
+					$this->write(self::EMPTY_SLOT_SIGN);
 				}
-				$this->write("\t\t\t");
+				$this->write(str_repeat(self::EMPTY_SLOT_SIGN, 5 - $rowNumber));
+				$this->write(' | ');
+				# wall
+				foreach ($player->getBoard()->getPattern($row) as $tile) {
+					if ($tile) {
+						$this->drawTile($tile);
+					} else {
+						$this->write(self::EMPTY_SLOT_SIGN);
+					}
+				}
+
+				$this->write("\t\t\t\t");
 			}
 			$this->writeln('');
 		}
@@ -162,6 +175,6 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	private function wait(): void
 	{
-		usleep(3000000);
+		usleep(1000000);
 	}
 }

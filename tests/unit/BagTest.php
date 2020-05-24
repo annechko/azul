@@ -36,10 +36,8 @@ class BagTest extends BaseUnit
 
 	public function testNextPlate_5TilesRefill4_Get4TilesTwice(): void
 	{
-		$tiles = new TileCollection();
-		for ($j = 0; $j < 5; $j++) {
-			$tiles->addTile(new Tile(Color::BLACK));
-		}
+		$tiles = new TileCollection(array_fill(1, 5, new Tile(Color::BLACK)));
+
 		$bag = new Bag($tiles);
 		$this->assertCount(4, $firstPlate = $bag->getNextPlate());
 		$bag->discardTiles($firstPlate);

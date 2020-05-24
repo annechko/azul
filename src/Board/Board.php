@@ -157,4 +157,9 @@ class Board
 	{
 		return $this->wall->isColorFilled($color, $rowNumber);
 	}
+
+	public function getPattern(BoardRow $row): array
+	{
+		return $this->wall->getPattern($row);
+	}
 }

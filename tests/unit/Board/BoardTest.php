@@ -52,17 +52,18 @@ class BoardTest extends BaseUnit
 
 	public function testGetDiscardedTiles_TileOnFloor_FloorEmpty(): void
 	{
-		$b = new Board();
-		$b->placeTiles(new TileCollection(new Tile(Color::RED)), Board::ROW_1);
-		$b->placeTiles(new TileCollection(new Tile(Color::RED)), Board::ROW_1); // on floor
+		$board = new Board();
+		$board->placeTiles(new TileCollection(new Tile($color = Color::RED)), $row = Board::ROW_1);
+		$board->placeTiles(new TileCollection(new Tile($color)), $row); // on floor
 
-		$this->assertEquals(1, $b->getFloorTilesCount());
-		$this->assertEquals(1, $b->getRowTilesCount(Board::ROW_1));
+		$this->assertEquals(1, $board->getFloorTilesCount());
+		$this->assertEquals(1, $board->getRowTilesCount($row));
+		$this->assertFalse($board->isWallColorFilled($color, $row));
 
-		$tiles = $b->discardTiles();
+		$tiles = $board->discardTiles();
 		$this->assertEquals(2, $tiles->count());
-		$this->assertEquals(0, $b->getFloorTilesCount());
-		$this->assertEquals(0, $b->getRowTilesCount(Board::ROW_1));
+		$this->assertEquals(0, $board->getFloorTilesCount());
+		$this->assertEquals(0, $board->getRowTilesCount($row));
 	}
 
 	public function testGetDiscardedTiles_RowsFull_AllTilesDiscarded(): void
