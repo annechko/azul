@@ -55,7 +55,9 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	public function onWallTiled(WallTiledEvent $event): void
 	{
-		$this->writeln('test - onWallTiled');
+		$this->writeln("\nWALL TILING\n");
+		$this->setPlayer($event->getPlayer());
+		$this->drawReport();
 	}
 
 	private function drawReport(): void
@@ -140,13 +142,13 @@ class ConsoleReporter implements EventSubscriberInterface
 		foreach (Board::getRowNumbers() as $rowNumber) {
 			foreach ($this->players as $player) {
 				$row = $player->getBoard()->getRow($rowNumber);
+				$this->write(str_repeat('  ', 5 - $rowNumber));
+				for ($j = 0; $j < $row->getEmptySlotsCount(); $j++) {
+					$this->write('★ ');
+				}
 				foreach ($row->getTiles() as $tile) {
 					$this->drawTile($tile);
 				}
-				for ($j = 0; $j < $row->getEmptySlotsCount(); $j++) {
-					$this->write(self::EMPTY_SLOT_SIGN);
-				}
-				$this->write(str_repeat(self::EMPTY_SLOT_SIGN, 5 - $rowNumber));
 				$this->write(' | ');
 				# wall
 				foreach ($player->getBoard()->getPattern($row) as $tile) {
