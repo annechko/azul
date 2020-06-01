@@ -50,23 +50,27 @@ class BoardTest extends BaseUnit
 		$this->assertEquals(2, $b->getRowTilesCount(Board::ROW_2));
 	}
 
-	public function testGetDiscardedTiles_TileOnFloor_FloorEmpty(): void
+	public function testDiscardTiles_TileOnFloor_FloorEmpty(): void
 	{
 		$board = new Board();
-		$board->placeTiles(new TileCollection(new Tile($color = Color::RED)), $row = Board::ROW_1);
+		$color = Color::RED;
+		$row = Board::ROW_1;
+		$board->placeTiles(new TileCollection(new Tile($color)), $row);
 		$board->placeTiles(new TileCollection(new Tile($color)), $row); // on floor
 
 		$this->assertEquals(1, $board->getFloorTilesCount());
 		$this->assertEquals(1, $board->getRowTilesCount($row));
 		$this->assertFalse($board->isWallColorFilled($color, $row));
 
+		$board->doWallTiling();
 		$tiles = $board->discardTiles();
-		$this->assertEquals(2, $tiles->count());
+		$this->assertEquals(1, $tiles->count());
 		$this->assertEquals(0, $board->getFloorTilesCount());
 		$this->assertEquals(0, $board->getRowTilesCount($row));
+		$this->assertTrue($board->isWallColorFilled($color, $row));
 	}
 
-	public function testGetDiscardedTiles_RowsFull_AllTilesDiscarded(): void
+	public function testDiscardTiles_RowsFull_AllTilesDiscarded(): void
 	{
 		$board = new Board();
 		$board->placeTiles($this->buildTiles(1), Board::ROW_1);
@@ -74,27 +78,45 @@ class BoardTest extends BaseUnit
 		$board->placeTiles($this->buildTiles(3), Board::ROW_3);
 		$board->placeTiles($this->buildTiles(4), Board::ROW_4);
 		$board->placeTiles($this->buildTiles(5), Board::ROW_5);
+
+		$board->doWallTiling();
 		$tiles = $board->discardTiles();
-		$this->assertCount(15, $tiles);
+		$this->assertCount(10, $tiles);
 	}
 
-	public function testGetDiscardedTiles_EmptyRows_NoTilesDiscarded(): void
+	public function testDiscardTiles_EmptyRows_NothingDiscarded(): void
 	{
 		$board = new Board();
+		$board->doWallTiling();
 		$tiles = $board->discardTiles();
 		$this->assertCount(0, $tiles);
 	}
 
-	public function testGetDiscardedTiles_2Row1Tile_1TileDiscarded(): void
+	public function testDiscardTiles_2Row1Tile_NothingDiscarded(): void
 	{
 		$rowNumber = Board::ROW_2;
 		$board = new Board();
 		$board->placeTiles($this->buildTiles(1), $rowNumber);
 
 		$this->assertEquals(1, $board->getRowTilesCount($rowNumber));
+
+		$board->doWallTiling();
 		$tiles = $board->discardTiles();
 		$this->assertCount(0, $tiles);
 		$this->assertEquals(1, $board->getRowTilesCount($rowNumber));
+	}
+
+	public function testDiscardTiles_2Row2Tile_1TileDiscarded1OnWall(): void
+	{
+		$rowNumber = Board::ROW_2;
+		$board = new Board();
+		$board->placeTiles($this->buildTiles(2), $rowNumber);
+
+		$this->assertEquals(2, $board->getRowTilesCount($rowNumber));
+		$board->doWallTiling();
+		$tiles = $board->discardTiles();
+		$this->assertCount(1, $tiles);
+		$this->assertEquals(0, $board->getRowTilesCount($rowNumber));
 	}
 
 	private function buildTiles(int $numberOfTiles): TileCollection

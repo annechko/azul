@@ -24,6 +24,7 @@ class Board
 	private BoardRow $row3;
 	private BoardRow $row4;
 	private BoardRow $row5;
+	private array $needToDiscard = [];
 
 	public function __construct(?BoardWall $wall = null)
 	{
@@ -108,6 +109,7 @@ class Board
 			if ($row->isCompleted()) {
 				if (!$this->wall->isColorFilledByRow($row)) {
 					$this->wall->fillColor($row);
+					$this->needToDiscard[$row->getName()] = true;
 				} else {
 					foreach ($row->getTiles() as $tile) {
 						$this->placeOnFloor($tile);
@@ -126,11 +128,12 @@ class Board
 	{
 		$tiles = new TileCollection();
 		foreach ($this->getRows() as $row) {
-			if ($row->isCompleted()) {
+			if (isset($this->needToDiscard[$row->getName()])) {
 				foreach ($row->getTiles()->takeAllTiles() as $tile) {
 					$tiles->addTile($tile);
 				}
 			}
+			$this->needToDiscard[$row->getName()] = null;
 		}
 		foreach ($this->floorLine->takeAllTiles() as $tile) {
 			$tiles->addTile($tile);
