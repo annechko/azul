@@ -40,10 +40,11 @@ class BoardWallTest extends BaseUnit
 	public function testPlaceTiles_OneColorTwoTimes_Exception(): void
 	{
 		$wall = new BoardWall();
-		$row = new BoardRow(1);
+		$row = new BoardRow(2);
 		$this->addTile($row, new Tile(Color::RED));
 		$wall->fillColor($row);
 		$this->expectException(BoardWallColorAlreadyFilledException::class);
+		$this->addTile($row, new Tile(Color::RED));
 		$wall->fillColor($row);
 	}
 
@@ -51,9 +52,10 @@ class BoardWallTest extends BaseUnit
 	{
 		$wall = new BoardWall();
 		$row = new BoardRow(1);
-		$this->addTile($row, new Tile(Color::RED));
+		$color = Color::RED;
+		$this->addTile($row, new Tile($color));
 		$wall->fillColor($row);
-		$this->assertTrue($wall->isColorFilledByRow($row));
+		$this->assertTrue($wall->isColorFilled($color, Board::ROW_1));
 	}
 
 	public function testIsColorFilled_NothingPlaced_False(): void

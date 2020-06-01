@@ -71,9 +71,9 @@ class BoardWall
 		return !in_array(null, $this->pattern[$rowNumber], true);
 	}
 
-	public function isColorFilled(string $color, int $row): bool
+	public function isColorFilled(string $color, int $rowNumber): bool
 	{
-		return $this->pattern[$row][$color] !== null;
+		return $this->pattern[$rowNumber][$color] !== null;
 	}
 
 	public function isColorFilledByRow(BoardRow $row): bool
