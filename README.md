@@ -20,4 +20,6 @@ Looks like this:
 
 Game review
 
-![Azul itself](https://youtu.be/ykbKYvB5-9g)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=ykbKYvB5-9g
+" target="_blank"><img src="https://youtu.be/ykbKYvB5-9g/0.jpg"
+alt="Azul itself" width="240" height="180" border="10" /></a>
