@@ -1,7 +1,7 @@
 # azul
 So one day I got azul board game ([bgg link](https://boardgamegeek.com/boardgame/230802/azul)).
 
-Azul is a simple and yet beautiful game, one of those that easy to learn and difficult to master.
+Azul is a simple and yet beautiful game, one of those that are easy to learn and difficult to master.
 
 
 So I got interested and wanted to create a script that can play azul. Also wanted tdd practice)
@@ -16,4 +16,8 @@ php azul play
 ```
 Looks like this:
 
-![grab-landing-page](https://github.com/annechko/azul/blob/master/assets/preview-console.gif)
+![console preview](https://github.com/annechko/azul/blob/master/assets/preview-console.gif)
+
+Game review
+
+![Azul itself](https://youtu.be/ykbKYvB5-9g)
