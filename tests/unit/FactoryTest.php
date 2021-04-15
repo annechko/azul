@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\unit;
 
 use Azul\Game\Factory;
 use Azul\Tile\Color;
@@ -28,7 +28,10 @@ class FactoryTest extends BaseUnit
 
 	public function testTake_NoExistedColor_Exception(): void
 	{
-		$factory = new Factory($this->tester->createGameTable(), new TileCollection(array_fill(0, 4, new Tile(Color::BLACK))));
+		$factory = new Factory(
+			$this->tester->createGameTable(),
+			new TileCollection(array_fill(0, 4, new Tile(Color::BLACK)))
+		);
 		$this->expectExceptionMessageRegExp('#at least 1#');
 		$factory->take(Color::CYAN);
 	}

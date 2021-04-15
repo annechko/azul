@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConsoleReporter implements EventSubscriberInterface
 {
 	private const EMPTY_SLOT_SIGN = '🖤';
+	private const SECONDS_PAUSE_BETWEEN_MOVES = 100000;
 	private OutputInterface $output;
 	private \Azul\Game\GameRound $round;
 	/** @var Player[] */
@@ -177,6 +178,6 @@ class ConsoleReporter implements EventSubscriberInterface
 
 	private function wait(): void
 	{
-		usleep(1000000);
+		usleep(self::SECONDS_PAUSE_BETWEEN_MOVES);
 	}
 }

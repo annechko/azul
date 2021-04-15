@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Board;
+namespace Tests\unit\Board;
 
 use Azul\Board\Board;
 use Azul\Board\BoardRow;
@@ -9,7 +9,7 @@ use Azul\Board\Exception\BoardWallColorAlreadyFilledException;
 use Azul\Tile\Color;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
-use Tests\BaseUnit;
+use Tests\unit\BaseUnit;
 
 class BoardWallTest extends BaseUnit
 {

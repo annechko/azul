@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\unit;
 
 use Azul\Tile\Color;
 use Azul\Tile\Marker;

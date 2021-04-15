@@ -23,9 +23,7 @@ class PlayGameCommand extends Command
 
 	protected function configure()
 	{
-		$this
-			->setDescription('Starts a new game.')
-			->setHelp('This command allows you to create a user...');
+		$this->setDescription('Starts a new game.');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)

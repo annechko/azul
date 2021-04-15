@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\unit;
 
 use Azul\Board\Board;
 use Azul\Board\BoardRow;

@@ -9,7 +9,7 @@ class GameRound
 	private FactoryCollection $factories;
 	private Table $table;
 
-	public function __construct(?Table $table, array $factories)
+	public function __construct(Table $table, array $factories)
 	{
 		$this->table = $table;
 		$this->factories = new FactoryCollection($factories);

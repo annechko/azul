@@ -16,9 +16,9 @@ class Game
 {
 	private Bag $bag;
 	private ?GameRound $round = null;
-	private ?EventDispatcher $dispatcher;
+	private EventDispatcher $dispatcher;
 
-	public function __construct(Bag $bag, ?EventDispatcher $dispatcher = null)
+	public function __construct(Bag $bag, EventDispatcher $dispatcher)
 	{
 		$this->bag = $bag;
 		$this->dispatcher = $dispatcher;
@@ -69,9 +69,6 @@ class Game
 
 	private function dispatch(GameEvent $event): void
 	{
-		if (!$this->dispatcher) {
-			return;
-		}
 		$this->dispatcher->dispatch($event);
 	}
 }

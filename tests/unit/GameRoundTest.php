@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\unit;
 
 use Azul\Game\Factory;
 use Azul\Game\GameRound;

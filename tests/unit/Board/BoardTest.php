@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Board;
+namespace Tests\unit\Board;
 
 use Azul\Board\Board;
 use Azul\Tile\Color;
 use Azul\Tile\Marker;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
-use Tests\BaseUnit;
+use Tests\unit\BaseUnit;
 
 class BoardTest extends BaseUnit
 {

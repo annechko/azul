@@ -5,3 +5,4 @@ tests/_support/
 tests/_output
 tests/_data
 .php_cs.cache
+.DS_Store
