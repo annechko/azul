@@ -24,7 +24,7 @@ class Board
 	private BoardRow $row3;
 	private BoardRow $row4;
 	private BoardRow $row5;
-	private array $needToDiscard = [];
+	private array $rowNumberToDiscard = [];
 
 	public function __construct(?BoardWall $wall = null)
 	{
@@ -50,6 +50,7 @@ class Board
 
 	public function placeTiles(TileCollection $tiles, $rowOrNumber): void
 	{
+		// TODO should check if wall color is filled by tiles color - throw exception
 		$row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
 		if ($tiles->top()->isFirstPlayerMarker()) {
 			$this->placeOnFloor($tiles->pop());
@@ -109,7 +110,7 @@ class Board
 			if ($row->isCompleted()) {
 				if (!$this->wall->isColorFilledByRow($row)) {
 					$this->wall->fillColor($row);
-					$this->needToDiscard[$row->getName()] = true;
+					$this->rowNumberToDiscard[$row->getRowNumber()] = true;
 				} else {
 					foreach ($row->getTiles() as $tile) {
 						$this->placeOnFloor($tile);
@@ -128,12 +129,12 @@ class Board
 	{
 		$tiles = new TileCollection();
 		foreach ($this->getRows() as $row) {
-			if (isset($this->needToDiscard[$row->getName()])) {
+			if (isset($this->rowNumberToDiscard[$row->getRowNumber()])) {
 				foreach ($row->getTiles()->takeAllTiles() as $tile) {
 					$tiles->addTile($tile);
 				}
 			}
-			$this->needToDiscard[$row->getName()] = null;
+			$this->rowNumberToDiscard[$row->getRowNumber()] = null;
 		}
 		foreach ($this->floorLine->takeAllTiles() as $tile) {
 			$tiles->addTile($tile);
@@ -143,12 +144,7 @@ class Board
 
 	public function isAnyWallRowCompleted(): bool
 	{
-		foreach ($this->getRows() as $row) {
-			if ($this->wall->isCompleted($row->getName())) {
-				return true;
-			}
-		}
-		return false;
+		return $this->wall->isAnyRowCompleted();
 	}
 
 	public function getFloorTiles(): TileCollection

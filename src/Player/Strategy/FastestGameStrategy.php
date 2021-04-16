@@ -59,7 +59,7 @@ class FastestGameStrategy extends AbstractStrategy
 	{
 		foreach ($this->board->getRows() as $row) {
 			foreach (Color::getAll() as $color) {
-				if ($this->board->isWallColorFilled($color, $row->getName())) {
+				if ($this->board->isWallColorFilled($color, $row->getRowNumber())) {
 					continue;
 				}
 				$success = $this->tryToTake($row, $storage, $color);

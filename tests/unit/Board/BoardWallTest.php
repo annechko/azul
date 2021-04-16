@@ -13,19 +13,39 @@ use Tests\unit\BaseUnit;
 
 class BoardWallTest extends BaseUnit
 {
-	public function testIsCompleted_AllColorsRow_True(): void
+	public function testIsAnyRowCompleted_EmptyWall_False(): void
 	{
 		$wall = new BoardWall();
-		$this->assertFalse($wall->isCompleted(Board::ROW_1));
+		$this->assertFalse($wall->isAnyRowCompleted());
+	}
+
+	public function testIsAnyRowCompleted_AllColorsOnFirstRow_True(): void
+	{
+		$wall = new BoardWall();
 		foreach (Color::getAll() as $color) {
 			$row = new BoardRow(1);
 			$this->addTile($row, new Tile($color));
 			$wall->fillColor($row);
 		}
-		$this->assertTrue($wall->isCompleted(Board::ROW_1));
+		$this->assertTrue($wall->isAnyRowCompleted());
 	}
 
-	public function testFillColor_RowCompleted_TileTakenFromRow(): void
+	public function testIsAnyRowCompleted_AllColorsOnAllRows_True(): void
+	{
+		$wall = new BoardWall();
+		foreach (Color::getAll() as $color) {
+			foreach (Board::getRowNumbers() as $rowNumber) {
+				$row = new BoardRow($rowNumber);
+				for ($i = 0; $i < $rowNumber; $i++) {
+					$this->addTile($row, new Tile($color));
+				}
+				$wall->fillColor($row);
+			}
+		}
+		$this->assertTrue($wall->isAnyRowCompleted());
+	}
+
+	public function testFillColor_SecondRowCompleted_TileTakenFromRow(): void
 	{
 		$wall = new BoardWall();
 		$row = new BoardRow(2);
@@ -35,6 +55,17 @@ class BoardWallTest extends BaseUnit
 		$wall->fillColor($row);
 
 		$this->assertCount(1, $row->getTiles());
+	}
+
+	public function testFillColor_FirstRowCompleted_TileTakenFromRow(): void
+	{
+		$wall = new BoardWall();
+		$row = new BoardRow(1);
+		$this->addTile($row, new Tile(Color::RED));
+
+		$wall->fillColor($row);
+
+		$this->assertCount(0, $row->getTiles());
 	}
 
 	public function testPlaceTiles_OneColorTwoTimes_Exception(): void
@@ -53,6 +84,7 @@ class BoardWallTest extends BaseUnit
 		$wall = new BoardWall();
 		$row = new BoardRow(1);
 		$color = Color::RED;
+		$this->assertFalse($wall->isColorFilled($color, Board::ROW_1));
 		$this->addTile($row, new Tile($color));
 		$wall->fillColor($row);
 		$this->assertTrue($wall->isColorFilled($color, Board::ROW_1));
@@ -61,13 +93,10 @@ class BoardWallTest extends BaseUnit
 	public function testIsColorFilled_NothingPlaced_False(): void
 	{
 		$wall = new BoardWall();
-		foreach (Color::getAll() as $color) {
-			for ($maxTiles = 1; $maxTiles <= 5; $maxTiles++) {
-				$this->assertFalse($wall->isColorFilledByRow(
-					$this->construct(BoardRow::class, ['maxTiles' => $maxTiles], ['getMainColor' => $color])
-				));
-			}
-		}
+		$wall->isColorFilledByRow(
+			$this->construct(BoardRow::class, ['maxTiles' => 1],
+				['getMainColor' => Color::BLACK])
+		);
 	}
 
 	private function addTile(BoardRow $row, Tile $tile): void

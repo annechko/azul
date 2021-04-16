@@ -63,12 +63,17 @@ class BoardWall
 		if ($this->isColorFilledByRow($row)) {
 			throw new BoardWallColorAlreadyFilledException();
 		}
-		$this->pattern[$row->getName()][$row->getMainColor()] = $row->getTileForWall();
+		$this->pattern[$row->getRowNumber()][$row->getMainColor()] = $row->getTileForWall();
 	}
 
-	public function isCompleted(int $rowNumber): bool
+	public function isAnyRowCompleted(): bool
 	{
-		return !in_array(null, $this->pattern[$rowNumber], true);
+		foreach ($this->pattern as $tiles) {
+			if (!in_array(null, $tiles, true)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public function isColorFilled(string $color, int $rowNumber): bool
@@ -78,11 +83,11 @@ class BoardWall
 
 	public function isColorFilledByRow(BoardRow $row): bool
 	{
-		return $this->isColorFilled($row->getMainColor(), $row->getName());
+		return $this->isColorFilled($row->getMainColor(), $row->getRowNumber());
 	}
 
 	public function getPattern(BoardRow $row): array
 	{
-		return $this->pattern[$row->getName()];
+		return $this->pattern[$row->getRowNumber()];
 	}
 }
