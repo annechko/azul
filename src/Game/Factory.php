@@ -10,28 +10,34 @@ use Webmozart\Assert\Assert;
 class Factory implements ITileStorage
 {
 	private TileCollection $tiles;
-	private Table $table;
 
-	public function __construct(Table $table, TileCollection $tiles)
+	public function __construct(TileCollection $tiles)
 	{
-		$this->table = $table;
 		$this->tiles = $tiles;
+	}
+
+	public function takeAll(): TileCollection
+	{
+		$tiles = $this->tiles;
+		$this->tiles = new TileCollection();
+		return $tiles;
 	}
 
 	public function take(string $color): TileCollection
 	{
 		$tilesByColor = new TileCollection();
-		$tilesToTable = new TileCollection();
-		foreach ($this->tiles as $index => $tile) {
+		$tilesLeft = new TileCollection();
+		// TODO probably tile collection should not be list -_-
+		foreach ($this->tiles as $tile) {
 			if ($tile->isSameColor($color)) {
 				$tilesByColor[] = $tile;
 			} else {
-				$tilesToTable[] = $tile;
+				$tilesLeft[] = $tile;
 			}
 		}
 		Assert::minCount($tilesByColor, 1);
-		$this->table->addToCenterPile($tilesToTable);
-		$this->tiles = new TileCollection();
+		// TODO either do everything only with asserts or only with exceptions
+		$this->tiles = new TileCollection($tilesLeft);
 		return $tilesByColor;
 	}
 

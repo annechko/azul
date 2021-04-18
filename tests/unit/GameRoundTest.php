@@ -15,7 +15,7 @@ class GameRoundTest extends BaseUnit
 		$t = $this->tester->createGameTable();
 		$round = new GameRound($t,
 			[
-				$f = new Factory($t,
+				$f = new Factory(
 					new TileCollection([
 						new Tile(Color::CYAN),
 						new Tile(Color::CYAN),

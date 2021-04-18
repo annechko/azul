@@ -22,9 +22,4 @@ class Tile
 	{
 		return $this->color === $color;
 	}
-
-	public function isFirstPlayerMarker(): bool
-	{
-		return false;
-	}
 }

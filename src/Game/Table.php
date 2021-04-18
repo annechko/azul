@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Azul\Game;
 
+use Azul\Game\Exception\MarkerAlreadyTakenException;
 use Azul\Tile\Marker;
 use Azul\Tile\TileCollection;
 use Webmozart\Assert\Assert;
@@ -44,10 +45,6 @@ class Table implements ITileStorage
 	{
 		Assert::notEmpty($this->centerPile[$color]);
 		$tiles = $this->centerPile[$color]->takeAllTiles();
-		if ($this->marker) {
-			$tiles->addTile($this->marker);
-			$this->marker = null;
-		}
 		unset($this->centerPile[$color]);
 		return $tiles;
 	}
@@ -60,5 +57,21 @@ class Table implements ITileStorage
 	public function getMarker(): ?Marker
 	{
 		return $this->marker;
+	}
+
+	public function hasMarker(): bool
+	{
+		return $this->getMarker() !== null;
+	}
+
+	public function takeMarker(): Marker
+	{
+		// TODO marker doesn't have to be singleton, can create new obj here?
+		$marker = $this->marker;
+		if (!$marker) {
+			throw new MarkerAlreadyTakenException();
+		}
+		$this->marker = null;
+		return $marker;
 	}
 }

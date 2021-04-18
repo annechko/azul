@@ -50,11 +50,8 @@ class Board
 
 	public function placeTiles(TileCollection $tiles, $rowOrNumber): void
 	{
-		// TODO should check if wall color is filled by tiles color - throw exception
+		// TODO should check if wall color is filled by tiles color - throw exception, in Game?
 		$row = $rowOrNumber instanceof BoardRow ? $rowOrNumber : $this->getRow($rowOrNumber);
-		if ($tiles->top()->isFirstPlayerMarker()) {
-			$this->placeOnFloor($tiles->pop());
-		}
 		$extraCount = $tiles->count() - $row->getEmptySlotsCount();
 		for ($j = 0; $j < $extraCount; $j++) {
 			$this->placeOnFloor($tiles->pop());
@@ -160,5 +157,10 @@ class Board
 	public function getPattern(BoardRow $row): array
 	{
 		return $this->wall->getPattern($row);
+	}
+
+	public function placeMarker(\Azul\Tile\Marker $marker): void
+	{
+		$this->placeOnFloor($marker);
 	}
 }

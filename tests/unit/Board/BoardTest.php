@@ -4,7 +4,6 @@ namespace Tests\unit\Board;
 
 use Azul\Board\Board;
 use Azul\Tile\Color;
-use Azul\Tile\Marker;
 use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
 use Tests\unit\BaseUnit;
@@ -30,14 +29,6 @@ class BoardTest extends BaseUnit
 		$this->assertEquals(0, $b->getFloorTilesCount());
 		$b->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_2);
 		$this->assertEquals(0, $b->getFloorTilesCount());
-		$this->assertEquals(1, $b->getRowTilesCount(Board::ROW_2));
-	}
-
-	public function testPlaceTiles_TileAndMarker_TileOnFloor(): void
-	{
-		$b = new Board();
-		$b->placeTiles(new TileCollection([new Tile(Color::RED), new Marker()]), Board::ROW_2);
-		$this->assertEquals(1, $b->getFloorTilesCount());
 		$this->assertEquals(1, $b->getRowTilesCount(Board::ROW_2));
 	}
 

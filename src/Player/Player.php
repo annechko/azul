@@ -24,9 +24,9 @@ class Player
 		$this->gameStrategy = new FastestGameStrategy($this->board);
 	}
 
-	public function act(FactoryCollection $factories, Table $table): void
+	public function getNextMove(FactoryCollection $factories, Table $table): ?Move
 	{
-		$this->gameStrategy->act($factories, $table);
+		return $this->gameStrategy->getNextMove($factories, $table);
 	}
 
 	public function doWallTiling(): void
@@ -52,5 +52,15 @@ class Player
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	public function takeMarker(\Azul\Tile\Marker $marker): void
+	{
+		$this->board->placeMarker($marker);
+	}
+
+	public function placeTiles(TileCollection $tiles, int $rowNumber): void
+	{
+		$this->board->placeTiles($tiles, $rowNumber);
 	}
 }

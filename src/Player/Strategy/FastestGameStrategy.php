@@ -3,71 +3,69 @@
 namespace Azul\Player\Strategy;
 
 use Azul\Board\Board;
-use Azul\Board\BoardRow;
 use Azul\Game\FactoryCollection;
-use Azul\Game\ITileStorage;
 use Azul\Game\Table;
+use Azul\Player\Move;
 use Azul\Tile\Color;
 
 class FastestGameStrategy extends AbstractStrategy
 {
-	public function act(FactoryCollection $factories, Table $table): void
-	{
-		foreach ($factories as $factory) {
-			$success = $this->takeIfWallRowEmpty($factory);
-			if ($success) {
-				return;
-			}
-		}
-		if ($this->takeIfWallRowEmpty($table)) {
-			return;
-		}
-
-		foreach (Color::getAll() as $color) {
-			foreach ($this->board->getRows() as $row) {
-				foreach ($factories as $factory) {
-					$success = $this->tryToTake($row, $factory, $color, true);
-					if ($success) {
-						return;
-					}
-				}
-				$success = $this->tryToTake($row, $table, $color, true);
-				if ($success) {
-					return;
-				}
-			}
-		}
-	}
-
-	private function tryToTake(BoardRow $row, ITileStorage $storage, string $color, bool $force = false): bool
-	{
-		$count = $storage->getTilesCount($color);
-		if ($count > 0) {
-			if ($force) {
-				$this->board->placeTiles($storage->take($color), Board::ROW_1); // so tiles go on floor
-				return true;
-			}
-			if ($row->isMainColor($color) && $row->getEmptySlotsCount() > 0) {
-				$this->board->placeTiles($storage->take($color), $row);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private function takeIfWallRowEmpty(ITileStorage $storage): bool
+	public function getNextMove(FactoryCollection $factories, Table $table): ?Move
 	{
 		foreach ($this->board->getRows() as $row) {
-			foreach (Color::getAll() as $color) {
-				if ($this->board->isWallColorFilled($color, $row->getRowNumber())) {
-					continue;
+			if ($row->getTilesCount() === 0) {
+				# row is empty, get any color that is not on the wall
+				foreach ($this->getColors() as $color) {
+					if ($this->board->isWallColorFilled($color, $row->getRowNumber())) {
+						continue;
+					}
+					# look for this color by factories, take it from anywhere
+					foreach ($factories as $factory) {
+						if ($factory->getTilesCount($color) === 0) {
+							continue;
+						}
+						return new Move($color, $row->getRowNumber(), $factory);
+					}
+					if ($table->getTilesCount($color)) {
+						return new Move($color, $row->getRowNumber(), $table);
+					}
 				}
-				$success = $this->tryToTake($row, $storage, $color);
-				if ($success) {
-					return $success;
+			} else {
+				if ($row->getEmptySlotsCount() > 0) {
+					# row already got tiles, look for the same color anywhere
+					$color = $row->getMainColor();
+					foreach ($factories as $factory) {
+						if ($factory->getTilesCount($color) === 0) {
+							continue;
+						}
+						return new Move($color, $row->getRowNumber(), $factory);
+					}
+					# no needed tiles on factories, check table for this color
+					if ($table->getTilesCount($color)) {
+						return new Move($color, $row->getRowNumber(), $table);
+					}
 				}
 			}
 		}
-		return false;
+
+		foreach ($factories as $factory) {
+			foreach ($this->getColors() as $color) {
+				if ($factory->getTilesCount($color) > 0) {
+					return new Move($color, Board::ROW_1, $factory);
+				} else {
+					if ($table->getTilesCount($color) > 0) {
+						return new Move($color, Board::ROW_1, $table);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private function getColors(): array
+	{
+		$colors = Color::getAll();
+		shuffle($colors);
+		return $colors;
 	}
 }

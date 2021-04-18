@@ -14,59 +14,51 @@ use Azul\Tile\TileCollection;
 
 class PlayerTest extends BaseUnit
 {
-	public function testAct_TiledFactoryEmptyTable_IncreaseBoardTilesByFactory(): void
+	public function testGetNextMove_ReturnMoveObject(): void
 	{
-		$player = new Player($board = new Board());
-		$t = $this->tester->createGameTable();
-		$factory = new Factory($t, new TileCollection([new Tile(Color::BLUE)]));
-		foreach ($board->getRows() as $row) {
-			$this->assertEquals(0, $row->getTilesCount());
-		}
-
-		$player->act(new FactoryCollection([$factory]), $t);
-
-		$counts = [];
-		foreach ($board->getRows() as $row) {
-			$counts[] = $row->getTilesCount();
-		}
-		$this->assertContains(1, $counts);
-		$this->assertEquals(0, $factory->getTilesCount());
+		$player = new Player(new Board());
+		$factory = new Factory(new TileCollection([new Tile(Color::BLUE)]));
+		$move = $player->getNextMove(new FactoryCollection([$factory]),
+			$this->tester->createGameTable());
+		$this->assertNotNull($move);
 	}
 
-	public function testAct_EmptyFactoryTiledTable_IncreaseBoardTilesByTable(): void
+	public function testGetNextMove_TiledFactoryEmptyTable_TookTilesFromFactory(): void
 	{
-		$player = new Player($board = new Board());
+		$player = new Player(new Board());
+		$t = $this->tester->createGameTable();
+		$factory = new Factory(new TileCollection([new Tile(Color::BLUE)]));
+
+		$move = $player->getNextMove(new FactoryCollection([$factory]), $t);
+		$this->assertFalse($move->isFromTable());
+	}
+
+	public function testGetNextMove_EmptyFactoryTiledTable_TookTilesFromTable(): void
+	{
+		$player = new Player(new Board());
 		$t = $this->tester->createGameTable();
 		$t->addToCenterPile(new TileCollection([new Tile(Color::BLUE)]));
 
-		foreach ($board->getRows() as $row) {
-			$this->assertEquals(0, $row->getTilesCount());
-		}
-
-		$player->act(new FactoryCollection([new Factory($t, new TileCollection())]), $t);
-
-		$counts = [];
-		foreach ($board->getRows() as $row) {
-			$counts[] = $row->getTilesCount();
-		}
-		$this->assertContains(1, $counts);
-		$this->assertEquals(0, $t->getTilesCount());
+		$move = $player->getNextMove(new FactoryCollection([new Factory(new TileCollection())]),
+			$t);
+		$this->assertTrue($move->isFromTable());
 	}
 
-	public function testAct_FullRowsTableHasTiles_TilePlacedOnFloor(): void
+	public function testGetNextMove_AllWallRowsHasRedTile_TookTilesAnyway(): void
 	{
 		$player = new Player($board = new Board());
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_1);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_2);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_3);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_4);
-		$board->placeTiles(new TileCollection([new Tile(Color::BLUE)]), Board::ROW_5);
+		$board->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_1);
+		$board->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_2);
+		$board->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_3);
+		$board->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_4);
+		$board->placeTiles(new TileCollection([new Tile(Color::RED)]), Board::ROW_5);
 		$t = $this->tester->createGameTable(null);
-		$t->addToCenterPile(new TileCollection([new Tile(Color::RED)]));
+		$t->addToCenterPile(new TileCollection([new Tile(Color::BLACK)]));
 
 		$this->assertEquals(0, $board->getFloorTilesCount());
-		$player->act(new FactoryCollection([new Factory($t, new TileCollection())]), $t);
-		$this->assertEquals(1, $board->getFloorTilesCount());
+		$move = $player->getNextMove(new FactoryCollection([new Factory(new TileCollection())]), $t);
+		$this->assertNotNull($move->getColor());
+		$this->assertNotNull($move->getRowNumber());
 	}
 
 	public function testIsGameOver_AllTilesOnWallAreFilled_True(): void
