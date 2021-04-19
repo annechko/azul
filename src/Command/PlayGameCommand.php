@@ -10,7 +10,6 @@ use Azul\Game\Game;
 use Azul\Player\Player;
 use Azul\Player\PlayerCollection;
 use Azul\Report\ConsoleReporter;
-use Azul\Tile\TileFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -34,11 +33,10 @@ class PlayGameCommand extends Command
 			new Player(new Board(), 'Ivan', ),
 			new Player(new Board(), 'Petr', ),
 		]);
-		$bag = new Bag((new TileFactory())->createGameTiles());
 
 		$dispatcher = new EventDispatcher();
 		$dispatcher->addSubscriber(new ConsoleReporter($players, new ConsoleOutput()));
-		$game = new Game($bag, $dispatcher);
+		$game = new Game(Bag::create(), $dispatcher);
 
 		$game->play($players);
 

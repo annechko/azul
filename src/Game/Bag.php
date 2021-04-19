@@ -4,61 +4,60 @@ declare(strict_types=1);
 
 namespace Azul\Game;
 
+use Azul\Tile\Color;
+use Azul\Tile\Tile;
 use Azul\Tile\TileCollection;
-use Webmozart\Assert\Assert;
 
 class Bag
 {
-	private TileCollection $tiles;
-	private TileCollection $discardTiles;
+	private array $tiles = [];
+	private array $discardTiles = [];
 
-	public function __construct(TileCollection $tiles)
+	public static function create(): self
 	{
-		Assert::range(count($tiles), 0, 100);
-		$this->refill($tiles);
-		$this->discardTiles = new TileCollection();
+		$bag = new self();
+		foreach (Color::getAll() as $color) {
+			$bag->addTiles($color, 20);
+		}
+		return $bag;
 	}
 
 	public function getNextPlate(): TileCollection
 	{
 		$plateTiles = new TileCollection();
-		if ($this->tiles->count() + $this->discardTiles->count() >= 4) {
+		// TODO check rules - if there are 3 left in bag - game stops?
+		if (array_sum($this->tiles) + array_sum($this->discardTiles) >= 4) {
 			while ($plateTiles->count() !== 4) {
-				if ($this->tiles->count() > 0) {
-					$plateTiles->push($this->tiles->pop());
-				} else {
-					$this->refill($this->discardTiles);
+				$availableColors = array_keys(array_filter(
+					$this->tiles,
+					static fn ($amount, $color) => $amount > 0,
+					ARRAY_FILTER_USE_BOTH
+				));
+				if (!$availableColors) {
+					$this->tiles = $this->discardTiles;
+					$this->discardTiles = [];
+					continue;
 				}
+				shuffle($availableColors);
+				$randomColor = array_pop($availableColors);
+				$this->tiles[$randomColor]--;
+				$plateTiles->push(new Tile($randomColor));
 			}
 		}
-
-		return $plateTiles->count() === 4 ? $plateTiles : new TileCollection();
+		return $plateTiles;
 	}
 
 	public function discardTiles(TileCollection $tiles): void
 	{
 		foreach ($tiles as $tile) {
-			$this->discardTiles->addTile($tile);
+			$color = $tile->getColor();
+			$this->discardTiles[$color] = ($this->discardTiles[$color] ?? 0) + 1;
 		}
 	}
 
-	private function refill(TileCollection $tiles): void
+	public function addTiles(string $color, int $amount): self
 	{
-		$this->tiles = $tiles;
-		$this->shuffleTiles();
-	}
-
-	private function shuffleTiles(): void
-	{
-		$shuffledTiles = new TileCollection();
-		$tiles = [];
-		foreach ($this->tiles as $tile) {
-			$tiles[] = $tile;
-		}
-		shuffle($tiles);
-		foreach ($tiles as $shuffledTile) {
-			$shuffledTiles->push($shuffledTile);
-		}
-		$this->tiles = $shuffledTiles;
+		$this->tiles[$color] = ($this->tiles[$color] ?? 0) + $amount;
+		return $this;
 	}
 }
