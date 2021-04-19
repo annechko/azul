@@ -30,8 +30,7 @@ class Bag
 			while ($plateTiles->count() !== 4) {
 				$availableColors = array_keys(array_filter(
 					$this->tiles,
-					static fn ($amount, $color) => $amount > 0,
-					ARRAY_FILTER_USE_BOTH
+					static fn ($amount) => $amount > 0
 				));
 				if (!$availableColors) {
 					$this->tiles = $this->discardTiles;
